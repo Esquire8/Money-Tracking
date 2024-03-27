@@ -11,9 +11,9 @@ namespace MoneyTracking.Data
 
         public DbSet<Expense> Expenses { get; set; }
 
-        public DbSet<Income_Category> Income_Categories { get; set; }
+        public DbSet<IncomeCategory> IncomeCategories { get; set; }
 
-        public DbSet<Expense_Category> Expense_Categories { get; set; }
+        public DbSet<ExpenseCategory> ExpenseCategories { get; set; }
 
         public MoneyTrackingContext(DbContextOptions<MoneyTrackingContext> options)
             : base(options)
