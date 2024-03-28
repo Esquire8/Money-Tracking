@@ -14,8 +14,8 @@ namespace MoneyTracking.Data.Models
 
         public DateTime RegistrationDate { get; set; }
 
-        public List<Income> Incomes { get; set; } = new();
+        public List<Income> Incomes { get; set; } = [];
 
-        public List<Expense> Expenses { get; set; } = new();
+        public List<Expense> Expenses { get; set; } = [];
     }
 }

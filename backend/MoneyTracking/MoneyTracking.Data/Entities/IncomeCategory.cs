@@ -8,6 +8,6 @@ namespace MoneyTracking.Data.Models
 
         public string Name { get; set; } = null!;
 
-        public List<Income> Incomes { get; set; } = new();
+        public List<Income> Incomes { get; set; } = [];
     }
 }

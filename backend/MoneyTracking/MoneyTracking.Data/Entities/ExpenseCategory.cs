@@ -10,6 +10,6 @@ namespace MoneyTracking.Data.Models
 
         public int Parentid { get; set; }
 
-        public List<Expense> Expenses { get; set; } = new();
+        public List<Expense> Expenses { get; set; } = [];
     }
 }
