@@ -12,11 +12,7 @@ namespace MoneyTracking.Data.Models
 
         public DateTime IncomeDate { get; set; }
 
-        public int UserId { get; set; }
-
         public User? User { get; set; }
-
-        public int IncomeCategoryId { get; set; }
 
         public IncomeCategory? IncomeCategory {  get; set; }
     }
