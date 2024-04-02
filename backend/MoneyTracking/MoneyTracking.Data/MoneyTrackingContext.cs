@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MoneyTracking.Data.Models;
+using MoneyTracking.Data.Entities;
 
 namespace MoneyTracking.Data
 {

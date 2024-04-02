@@ -22,7 +22,7 @@ namespace MoneyTracking.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("MoneyTracking.Data.Models.Expense", b =>
+            modelBuilder.Entity("MoneyTracking.Data.Entities.Expense", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -34,16 +34,15 @@ namespace MoneyTracking.Data.Migrations
                         .HasColumnType("numeric");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("ExpenseCategoryId")
+                    b.Property<int>("ExpenseCategoryId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("ExpenseDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -55,7 +54,7 @@ namespace MoneyTracking.Data.Migrations
                     b.ToTable("Expenses");
                 });
 
-            modelBuilder.Entity("MoneyTracking.Data.Models.ExpenseCategory", b =>
+            modelBuilder.Entity("MoneyTracking.Data.Entities.ExpenseCategory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -75,7 +74,7 @@ namespace MoneyTracking.Data.Migrations
                     b.ToTable("ExpenseCategories");
                 });
 
-            modelBuilder.Entity("MoneyTracking.Data.Models.Income", b =>
+            modelBuilder.Entity("MoneyTracking.Data.Entities.Income", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -87,16 +86,15 @@ namespace MoneyTracking.Data.Migrations
                         .HasColumnType("numeric");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("IncomeCategoryId")
+                    b.Property<int>("IncomeCategoryId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("IncomeDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -108,7 +106,7 @@ namespace MoneyTracking.Data.Migrations
                     b.ToTable("Incomes");
                 });
 
-            modelBuilder.Entity("MoneyTracking.Data.Models.IncomeCategory", b =>
+            modelBuilder.Entity("MoneyTracking.Data.Entities.IncomeCategory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -125,7 +123,7 @@ namespace MoneyTracking.Data.Migrations
                     b.ToTable("IncomeCategories");
                 });
 
-            modelBuilder.Entity("MoneyTracking.Data.Models.User", b =>
+            modelBuilder.Entity("MoneyTracking.Data.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -153,47 +151,55 @@ namespace MoneyTracking.Data.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("MoneyTracking.Data.Models.Expense", b =>
+            modelBuilder.Entity("MoneyTracking.Data.Entities.Expense", b =>
                 {
-                    b.HasOne("MoneyTracking.Data.Models.ExpenseCategory", "ExpenseCategory")
+                    b.HasOne("MoneyTracking.Data.Entities.ExpenseCategory", "ExpenseCategory")
                         .WithMany("Expenses")
-                        .HasForeignKey("ExpenseCategoryId");
+                        .HasForeignKey("ExpenseCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("MoneyTracking.Data.Models.User", "User")
+                    b.HasOne("MoneyTracking.Data.Entities.User", "User")
                         .WithMany("Expenses")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("ExpenseCategory");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MoneyTracking.Data.Models.Income", b =>
+            modelBuilder.Entity("MoneyTracking.Data.Entities.Income", b =>
                 {
-                    b.HasOne("MoneyTracking.Data.Models.IncomeCategory", "IncomeCategory")
+                    b.HasOne("MoneyTracking.Data.Entities.IncomeCategory", "IncomeCategory")
                         .WithMany("Incomes")
-                        .HasForeignKey("IncomeCategoryId");
+                        .HasForeignKey("IncomeCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("MoneyTracking.Data.Models.User", "User")
+                    b.HasOne("MoneyTracking.Data.Entities.User", "User")
                         .WithMany("Incomes")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("IncomeCategory");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MoneyTracking.Data.Models.ExpenseCategory", b =>
+            modelBuilder.Entity("MoneyTracking.Data.Entities.ExpenseCategory", b =>
                 {
                     b.Navigation("Expenses");
                 });
 
-            modelBuilder.Entity("MoneyTracking.Data.Models.IncomeCategory", b =>
+            modelBuilder.Entity("MoneyTracking.Data.Entities.IncomeCategory", b =>
                 {
                     b.Navigation("Incomes");
                 });
 
-            modelBuilder.Entity("MoneyTracking.Data.Models.User", b =>
+            modelBuilder.Entity("MoneyTracking.Data.Entities.User", b =>
                 {
                     b.Navigation("Expenses");
 

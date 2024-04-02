@@ -1,6 +1,6 @@
 ﻿using MoneyTracking.Data.Interfaces;
 
-namespace MoneyTracking.Data.Models
+namespace MoneyTracking.Data.Entities
 {
     public class User : IEntity
     {
