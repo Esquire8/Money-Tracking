@@ -1,0 +1,21 @@
+﻿using MoneyTracking.Data.Interfaces;
+
+namespace MoneyTracking.Data.Entities
+{
+    public class User : IEntity
+    {
+        public int Id { get ; set ; }
+
+        public string Login { get; set; } = null!;
+
+        public string Password { get; set; } = null!;
+
+        public string Email { get; set; } = null!;
+
+        public DateTime RegistrationDate { get; set; }
+
+        public List<Income> Incomes { get; set; } = [];
+
+        public List<Expense> Expenses { get; set; } = [];
+    }
+}

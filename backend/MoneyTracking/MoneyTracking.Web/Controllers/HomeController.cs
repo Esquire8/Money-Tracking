@@ -8,7 +8,7 @@ namespace MoneyTracking.Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         //private readonly IRepositoryBase<Income> _userRepository; 
-        //или IUserRepository, где IUserRepository : IRepositoryBase<User>
+         //РёР»Рё IUserRepository, РіРґРµ IUserRepository : IRepositoryBase<User>
 
 
         public HomeController(ILogger<HomeController> logger
@@ -39,7 +39,7 @@ namespace MoneyTracking.Web.Controllers
             };
 
             var addedUser = _userRepository.Add(newUser);
-            //через addedUser можно теперь получить Id добавленной сущности
+            //С‡РµСЂРµР· addedUser РјРѕР¶РЅРѕ С‚РµРїРµСЂСЊ РїРѕР»СѓС‡РёС‚СЊ Id РґРѕР±Р°РІР»РµРЅРЅРѕР№ СЃСѓС‰РЅРѕСЃС‚Рё
             return addUser.Id;
         }
         */
