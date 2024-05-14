@@ -1,42 +1,49 @@
-﻿using MoneyTracking.Data.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
+using MoneyTracking.Data.Entities;
 
 namespace MoneyTracking.Data.Repositories
 {
-    public class ExpenseCategoryRepository : IRepositoryBase<ExpenseCategory>
+    public class ExpenseCategoryRepository : IExpenseCategoryRepository
     {
-        public Task DeleteAsync(int id)
+        private readonly MoneyTrackingContext _context;
+
+        public ExpenseCategoryRepository(MoneyTrackingContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public Task<IEnumerable<ExpenseCategory>> GetAllAsync()
+        public async Task Add(ExpenseCategory entity)
         {
-            throw new NotImplementedException();
+            await _context.ExpenseCategories.AddAsync(entity);
         }
 
-        public Task<ExpenseCategory?> GetByIdAsync(int id)
+        public async Task Delete(int id)
         {
-            throw new NotImplementedException();
+            var expenseCategory = await _context.ExpenseCategories.FindAsync(id);
+            if (expenseCategory != null)
+            {
+                _context.Remove(expenseCategory);
+            }
         }
 
-        public Task InsertAsync(ExpenseCategory entity)
+        public async Task<IEnumerable<ExpenseCategory>> GetAll()
         {
-            throw new NotImplementedException();
+            return await _context.ExpenseCategories.ToListAsync();
         }
 
-        public Task SaveAsync()
+        public async Task<ExpenseCategory?> GetById(int id)
         {
-            throw new NotImplementedException();
+            return await _context.ExpenseCategories.FindAsync(id);
         }
 
-        public Task UpdateAsync(ExpenseCategory entity)
+        public async Task Save()
         {
-            throw new NotImplementedException();
+            await _context.SaveChangesAsync();
+        }
+
+        public void Update(ExpenseCategory entity)
+        {
+            _context.ExpenseCategories.Update(entity);
         }
     }
 }

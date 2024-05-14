@@ -10,14 +10,14 @@ namespace MoneyTracking.Web.Controllers
     public class HomeController : ControllerBase
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IRepositoryBase<User> _userRepository;
-        private readonly IRepositoryBase<IncomeCategory> _incomeCategoryRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IIncomeCategeryRepository _incomeCategoryRepository;
         private readonly MoneyTrackingContext _context;
 
         public HomeController(ILogger<HomeController> logger,
             MoneyTrackingContext context,
-            IRepositoryBase<User> userRepository,
-            IRepositoryBase<IncomeCategory> incomeCategoryRepository
+            IUserRepository userRepository,
+            IIncomeCategeryRepository incomeCategoryRepository
             )
         {
             _logger = logger;
@@ -26,38 +26,29 @@ namespace MoneyTracking.Web.Controllers
             _incomeCategoryRepository = incomeCategoryRepository;
         }
 
-        [HttpPost("insert-incomeCategory")]
-        public async Task<IncomeCategory> InsertIncomeCategory(string name)
+        [HttpPost("add-incomeCategory")]
+        public async Task<IActionResult> AddIncomeCategory(string name)
         {
             var newIncomeCategory = new IncomeCategory
             {
                 Name = name
             };
-            if (ModelState.IsValid)
+
+            if (string.IsNullOrWhiteSpace(name))
             {
-                await _incomeCategoryRepository.InsertAsync(newIncomeCategory);
-                await _incomeCategoryRepository.SaveAsync();
+                return BadRequest("Введите название категории");
             }
-            return newIncomeCategory;
+            else
+            {
+                await _incomeCategoryRepository.Add(newIncomeCategory);
+                //await _incomeCategoryRepository.Save();
+                return Ok($"Категория {name} добавлена");
+            }
         }
 
-        /*[HttpDelete("delete-incomeCategory")]
-        public async Task<IncomeCategory> DeleteIncomeCategory(int id)
-        {
-            var incomeCategory = await _incomeCategoryRepository.GetByIdAsync(id);
-
-            if (ModelState.IsValid && incomeCategory != null)
-            {
-                await _incomeCategoryRepository.DeleteAsync(id);
-                //await _incomeCategoryRepository.SaveAsync();
-            }
-
-            return incomeCategory;
-        }*/
-
         //Добавление пользователя
-        [HttpPost("insert-user")]
-        public async Task<int> InsertUser(string login, string password)
+        [HttpPost("add-user")]
+        public async Task<IActionResult> AddUser(string login, string password)
         {
             var newUser = new User
             {
@@ -67,57 +58,83 @@ namespace MoneyTracking.Web.Controllers
                 RegistrationDate = DateTime.UtcNow
             };
 
-            if (ModelState.IsValid)
+            if (newUser != null)
             {
-                await _userRepository.InsertAsync(newUser);
+                await _userRepository.Add(newUser);
                 //await _userRepository.SaveAsync();
+                return Ok($"Пользователь {newUser.Login} добавлен ");
             }
-            //Id добавленной сущности
-            return newUser.Id;
+            else
+            {
+                return BadRequest("Введите данные пользователя");
+            }
         }
 
         //Вывод всех пользователей
         [HttpGet("get-all-users")]
-        public async Task<IEnumerable<User>> GetAllUsers()
+        public async Task<IActionResult> GetAllUsers()
         {
-            var listUsers = await _userRepository.GetAllAsync();
-            return listUsers;
+            var listUsers = await _userRepository.GetAll();
+            if (listUsers != null)
+            {
+                return Ok(listUsers);
+            }
+            else
+            {
+                return BadRequest("Нет пользователей");
+            }
         }
 
         //Поиск пользователя по id
         [HttpGet("get-user-by-id")]
-        public async Task<User> GetUserById(int id)
+        public async Task<IActionResult> GetUserById(int id)
         {
-            var user = await _userRepository.GetByIdAsync(id);
-            return user;
+            var user = await _userRepository.GetById(id);
+
+            if (user != null)
+            {
+                return Ok(user.Login);
+            }
+            else
+            {
+                return BadRequest("Пользователь не найден");
+            }
         }
 
         //Редактирование пользователя
         [HttpPut("update-user")]
-        public async Task<User> UpdateUser(int id, string newLogin)
+        public async Task<IActionResult> UpdateUser(int id, string newLogin)
         {
-            var user = await _userRepository.GetByIdAsync(id);
-            user.Login = newLogin;
-            if (ModelState.IsValid)
+            var user = await _userRepository.GetById(id);
+            if (user != null)
             {
-                await _userRepository.UpdateAsync(user);
+                user.Login = newLogin;
+                _userRepository.Update(user);
                 //await _userRepository.SaveAsync();
+                return Ok("Пользователь обновлен");
             }
-            return user;
+            else
+            {
+                return BadRequest("Пользователь не найден");
+            }
         }
 
         //Удаление пользователя
         [HttpDelete("delete-user")]
-        public async Task<User> DeleteUser(int id)
+        public async Task<IActionResult> DeleteUser(int id)
         {
-            var user = await _userRepository.GetByIdAsync(id);
+            var user = await _userRepository.GetById(id);
 
-            if (ModelState.IsValid && user != null)
+            if (user != null)
             {
-                await _userRepository.DeleteAsync(id);
+                await _userRepository.Delete(user.Id);
                 //await _userRepository.SaveAsync();
+                return Ok("Пользователь удален");
             }
-            return user;
+            else
+            {
+                return BadRequest("Пользователь не найден");
+            }
         }
     }
 }

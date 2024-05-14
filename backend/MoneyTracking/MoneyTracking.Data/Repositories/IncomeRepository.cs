@@ -1,37 +1,49 @@
-﻿using MoneyTracking.Data.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using MoneyTracking.Data.Entities;
 
 namespace MoneyTracking.Data.Repositories
 {
-    public class IncomeRepository : IRepositoryBase<Income>
+    public class IncomeRepository : IIncomeRepository
     {
-        public Task DeleteAsync(int id)
+        private readonly MoneyTrackingContext _context;
+
+        public IncomeRepository(MoneyTrackingContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public Task<IEnumerable<Income>> GetAllAsync()
+        public async Task Delete(int id)
         {
-            throw new NotImplementedException();
+            var income = await _context.Incomes.FindAsync(id);
+            if (income != null)
+            {
+                _context.Incomes.Remove(income);
+            }
         }
 
-        public Task<Income?> GetByIdAsync(int id)
+        public async Task<IEnumerable<Income>> GetAll()
         {
-            throw new NotImplementedException();
+            return await _context.Incomes.ToListAsync();
         }
 
-        public Task InsertAsync(Income entity)
+        public async Task<Income?> GetById(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Incomes.FindAsync(id);
         }
 
-        public Task SaveAsync()
+        public async Task Add(Income entity)
         {
-            throw new NotImplementedException();
+            await _context.Incomes.AddAsync(entity);
         }
 
-        public Task UpdateAsync(Income entity)
+        public async Task Save()
         {
-            throw new NotImplementedException();
+            await _context.SaveChangesAsync();
+        }
+
+        public void Update(Income entity)
+        {
+            _context.Update(entity);
         }
     }
 }

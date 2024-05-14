@@ -3,7 +3,7 @@ using MoneyTracking.Data.Entities;
 
 namespace MoneyTracking.Data.Repositories
 {
-    public class UserRepository : IRepositoryBase<User>
+    public class UserRepository : IUserRepository
     {
         private readonly MoneyTrackingContext _context;
 
@@ -13,30 +13,29 @@ namespace MoneyTracking.Data.Repositories
         }
 
         //Получаем всех пользователей
-        public async Task<IEnumerable<User>> GetAllAsync()
+        public async Task<IEnumerable<User>> GetAll()
         {
             return await _context.Users.ToListAsync();
         }
 
         //Получаем пользователя по Id
-        public async Task<User?> GetByIdAsync(int userId)
+        public async Task<User?> GetById(int id)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
-            return user;
+            return await _context.Users.FindAsync(id);
         }
 
         //Добавляем пользователя
-        public async Task InsertAsync(User user)
+        public async Task Add(User user)
         {
             await _context.Users.AddAsync(user);
         }
 
-        public async Task UpdateAsync(User user)
+        public void Update(User user)
         {
             _context.Users.Update(user);
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task Delete(int id)
         {
             var user = await _context.Users.FindAsync(id);
             if (user != null)
@@ -45,7 +44,7 @@ namespace MoneyTracking.Data.Repositories
             }
         }
 
-        public async Task SaveAsync()
+        public async Task Save()
         {
             await _context.SaveChangesAsync();
         }

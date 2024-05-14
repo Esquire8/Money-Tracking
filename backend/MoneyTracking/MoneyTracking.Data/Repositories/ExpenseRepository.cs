@@ -1,42 +1,49 @@
-﻿using MoneyTracking.Data.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
+using MoneyTracking.Data.Entities;
 
 namespace MoneyTracking.Data.Repositories
 {
-    public class ExpenseRepository : IRepositoryBase<Expense>
+    public class ExpenseRepository : IExpenseRepository
     {
-        public Task DeleteAsync(int id)
+        private readonly MoneyTrackingContext _context;
+
+        public ExpenseRepository(MoneyTrackingContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public Task<IEnumerable<Expense>> GetAllAsync()
+        public async Task Add(Expense entity)
         {
-            throw new NotImplementedException();
+            await _context.Expenses.AddAsync(entity);
         }
 
-        public Task<Expense?> GetByIdAsync(int id)
+        public async Task Delete(int id)
         {
-            throw new NotImplementedException();
+            var expense = await _context.Expenses.FindAsync(id);
+            if (expense != null)
+            {
+                _context.Remove(expense);
+            }
         }
 
-        public Task InsertAsync(Expense entity)
+        public async Task<IEnumerable<Expense>> GetAll()
         {
-            throw new NotImplementedException();
+            return await _context.Expenses.ToListAsync();
         }
 
-        public Task SaveAsync()
+        public async Task<Expense?> GetById(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Expenses.FindAsync(id);
         }
 
-        public Task UpdateAsync(Expense entity)
+        public async Task Save()
         {
-            throw new NotImplementedException();
+            await _context.SaveChangesAsync();
+        }
+
+        public void Update(Expense entity)
+        {
+            _context.Expenses.Update(entity);
         }
     }
 }

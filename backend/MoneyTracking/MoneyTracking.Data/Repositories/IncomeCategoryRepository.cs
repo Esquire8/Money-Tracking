@@ -3,7 +3,7 @@ using MoneyTracking.Data.Entities;
 
 namespace MoneyTracking.Data.Repositories
 {
-    public class IncomeCategoryRepository : IRepositoryBase<IncomeCategory>
+    public class IncomeCategoryRepository : IIncomeCategeryRepository
     {
         private readonly MoneyTrackingContext _context;
 
@@ -12,7 +12,7 @@ namespace MoneyTracking.Data.Repositories
             _context = context;
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task Delete(int id)
         {
             var incomeCategory = await _context.IncomeCategories.FindAsync(id);
             if (incomeCategory != null)
@@ -21,28 +21,27 @@ namespace MoneyTracking.Data.Repositories
             }
         }
 
-        public async Task<IEnumerable<IncomeCategory>> GetAllAsync()
+        public async Task<IEnumerable<IncomeCategory>> GetAll()
         {
             return await _context.IncomeCategories.ToListAsync();
         }
 
-        public async Task<IncomeCategory?> GetByIdAsync(int id)
+        public async Task<IncomeCategory?> GetById(int id)
         {
-            var incomeCategory = await _context.IncomeCategories.FirstOrDefaultAsync(i => i.Id == id);
-            return incomeCategory;
+            return await _context.IncomeCategories.FindAsync(id);
         }
 
-        public async Task InsertAsync(IncomeCategory incomeCategory)
+        public async Task Add(IncomeCategory incomeCategory)
         {
             await _context.IncomeCategories.AddAsync(incomeCategory);
         }
 
-        public async Task SaveAsync()
+        public async Task Save()
         {
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(IncomeCategory incomeCategory)
+        public void Update(IncomeCategory incomeCategory)
         {
             _context.IncomeCategories.Update(incomeCategory);
         }
