@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MoneyTracking.Data.Entities;
+using MoneyTracking.Data.Repositories.UserRep;
 
 namespace MoneyTracking.Data.Repositories
 {
@@ -37,7 +38,7 @@ namespace MoneyTracking.Data.Repositories
 
         public async Task Delete(int id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await GetById(id);
             if (user != null)
             {
                 _context.Users.Remove(user);

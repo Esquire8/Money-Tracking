@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MoneyTracking.Data.Entities;
 
-namespace MoneyTracking.Data.Repositories
+namespace MoneyTracking.Data.Repositories.IncomeRep
 {
     public class IncomeRepository : IIncomeRepository
     {
@@ -14,7 +14,7 @@ namespace MoneyTracking.Data.Repositories
 
         public async Task Delete(int id)
         {
-            var income = await _context.Incomes.FindAsync(id);
+            var income = await GetById(id);
             if (income != null)
             {
                 _context.Incomes.Remove(income);

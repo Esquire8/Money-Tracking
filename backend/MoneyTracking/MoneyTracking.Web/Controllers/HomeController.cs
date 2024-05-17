@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MoneyTracking.Data;
 using MoneyTracking.Data.Entities;
-using MoneyTracking.Data.Repositories;
+using MoneyTracking.Data.UnitOfWork;
 
 namespace MoneyTracking.Web.Controllers
 {
@@ -10,22 +10,20 @@ namespace MoneyTracking.Web.Controllers
     public class HomeController : ControllerBase
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IUserRepository _userRepository;
-        private readonly IIncomeCategeryRepository _incomeCategoryRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly MoneyTrackingContext _context;
 
         public HomeController(ILogger<HomeController> logger,
             MoneyTrackingContext context,
-            IUserRepository userRepository,
-            IIncomeCategeryRepository incomeCategoryRepository
+            IUnitOfWork unitOfWork
             )
         {
             _logger = logger;
             _context = context;
-            _userRepository = userRepository;
-            _incomeCategoryRepository = incomeCategoryRepository;
+            _unitOfWork = unitOfWork;
         }
 
+        //Добавление категории
         [HttpPost("add-incomeCategory")]
         public async Task<IActionResult> AddIncomeCategory(string name)
         {
@@ -40,8 +38,8 @@ namespace MoneyTracking.Web.Controllers
             }
             else
             {
-                await _incomeCategoryRepository.Add(newIncomeCategory);
-                //await _incomeCategoryRepository.Save();
+                await _unitOfWork.IncomesCategeries.Add(newIncomeCategory);
+                await _unitOfWork.Save();
                 return Ok($"Категория {name} добавлена");
             }
         }
@@ -60,8 +58,8 @@ namespace MoneyTracking.Web.Controllers
 
             if (newUser != null)
             {
-                await _userRepository.Add(newUser);
-                //await _userRepository.SaveAsync();
+                await _unitOfWork.Users.Add(newUser);
+                await _unitOfWork.Save();
                 return Ok($"Пользователь {newUser.Login} добавлен ");
             }
             else
@@ -74,7 +72,7 @@ namespace MoneyTracking.Web.Controllers
         [HttpGet("get-all-users")]
         public async Task<IActionResult> GetAllUsers()
         {
-            var listUsers = await _userRepository.GetAll();
+            var listUsers = await _unitOfWork.Users.GetAll();
             if (listUsers != null)
             {
                 return Ok(listUsers);
@@ -89,7 +87,7 @@ namespace MoneyTracking.Web.Controllers
         [HttpGet("get-user-by-id")]
         public async Task<IActionResult> GetUserById(int id)
         {
-            var user = await _userRepository.GetById(id);
+            var user = await _unitOfWork.Users.GetById(id);
 
             if (user != null)
             {
@@ -105,12 +103,12 @@ namespace MoneyTracking.Web.Controllers
         [HttpPut("update-user")]
         public async Task<IActionResult> UpdateUser(int id, string newLogin)
         {
-            var user = await _userRepository.GetById(id);
+            var user = await _unitOfWork.Users.GetById(id);
             if (user != null)
             {
                 user.Login = newLogin;
-                _userRepository.Update(user);
-                //await _userRepository.SaveAsync();
+                _unitOfWork.Users.Update(user);
+                await _unitOfWork.Save();
                 return Ok("Пользователь обновлен");
             }
             else
@@ -123,12 +121,12 @@ namespace MoneyTracking.Web.Controllers
         [HttpDelete("delete-user")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var user = await _userRepository.GetById(id);
+            var user = await _unitOfWork.Users.GetById(id);
 
             if (user != null)
             {
-                await _userRepository.Delete(user.Id);
-                //await _userRepository.SaveAsync();
+                await _unitOfWork.Users.Delete(user.Id);
+                await _unitOfWork.Save();
                 return Ok("Пользователь удален");
             }
             else
