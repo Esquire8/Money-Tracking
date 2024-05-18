@@ -1,4 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using MoneyTracking.Data;
+using MoneyTracking.Data.Entities;
+using MoneyTracking.Data.UnitOfWork;
 
 namespace MoneyTracking.Web.Controllers
 {
@@ -7,41 +10,129 @@ namespace MoneyTracking.Web.Controllers
     public class HomeController : ControllerBase
     {
         private readonly ILogger<HomeController> _logger;
-        //private readonly IRepositoryBase<Income> _userRepository; 
-         //или IUserRepository, где IUserRepository : IRepositoryBase<User>
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly MoneyTrackingContext _context;
 
-
-        public HomeController(ILogger<HomeController> logger
-            //,userRepository
+        public HomeController(ILogger<HomeController> logger,
+            MoneyTrackingContext context,
+            IUnitOfWork unitOfWork
             )
         {
             _logger = logger;
-            //_userRepository = userRepository;
+            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
-
-        [HttpGet("hello-world")]
-        public string HelloWorld()
+        //Добавление категории
+        [HttpPost("add-incomeCategory")]
+        public async Task<IActionResult> AddIncomeCategory(string name)
         {
-            return "HelloWorld";
+            var newIncomeCategory = new IncomeCategory
+            {
+                Name = name
+            };
+
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return BadRequest("Введите название категории");
+            }
+            else
+            {
+                await _unitOfWork.IncomesCategeries.Add(newIncomeCategory);
+                await _unitOfWork.Save();
+                return Ok($"Категория {name} добавлена");
+            }
         }
 
-        /*
-        [HttpGet("add-user")]
-        public int AddUser()
+        //Добавление пользователя
+        [HttpPost("add-user")]
+        public async Task<IActionResult> AddUser(string login, string password)
         {
             var newUser = new User
             {
-                Login = "Test",
+                Login = login,
                 Email = "test@test.ru",
-                Password = "qwqwe",
-                RegistrationDate = DateTime.Now
+                Password = password,
+                RegistrationDate = DateTime.UtcNow
             };
 
-            var addedUser = _userRepository.Add(newUser);
-            //через addedUser можно теперь получить Id добавленной сущности
-            return addUser.Id;
+            if (newUser != null)
+            {
+                await _unitOfWork.Users.Add(newUser);
+                await _unitOfWork.Save();
+                return Ok($"Пользователь {newUser.Login} добавлен ");
+            }
+            else
+            {
+                return BadRequest("Введите данные пользователя");
+            }
         }
-        */
+
+        //Вывод всех пользователей
+        [HttpGet("get-all-users")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var listUsers = await _unitOfWork.Users.GetAll();
+            if (listUsers != null)
+            {
+                return Ok(listUsers);
+            }
+            else
+            {
+                return BadRequest("Нет пользователей");
+            }
+        }
+
+        //Поиск пользователя по id
+        [HttpGet("get-user-by-id")]
+        public async Task<IActionResult> GetUserById(int id)
+        {
+            var user = await _unitOfWork.Users.GetById(id);
+
+            if (user != null)
+            {
+                return Ok(user.Login);
+            }
+            else
+            {
+                return BadRequest("Пользователь не найден");
+            }
+        }
+
+        //Редактирование пользователя
+        [HttpPut("update-user")]
+        public async Task<IActionResult> UpdateUser(int id, string newLogin)
+        {
+            var user = await _unitOfWork.Users.GetById(id);
+            if (user != null)
+            {
+                user.Login = newLogin;
+                _unitOfWork.Users.Update(user);
+                await _unitOfWork.Save();
+                return Ok("Пользователь обновлен");
+            }
+            else
+            {
+                return BadRequest("Пользователь не найден");
+            }
+        }
+
+        //Удаление пользователя
+        [HttpDelete("delete-user")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var user = await _unitOfWork.Users.GetById(id);
+
+            if (user != null)
+            {
+                await _unitOfWork.Users.Delete(user.Id);
+                await _unitOfWork.Save();
+                return Ok("Пользователь удален");
+            }
+            else
+            {
+                return BadRequest("Пользователь не найден");
+            }
+        }
     }
 }
