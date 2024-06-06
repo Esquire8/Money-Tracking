@@ -1,12 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using MoneyTracking.Data;
-using MoneyTracking.Web;
+using MoneyTracking.Web.Setup;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
 // Add services to the container.
 builder.Services.AddDataDependencies();
+builder.Services.AddServiceDependencies();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
