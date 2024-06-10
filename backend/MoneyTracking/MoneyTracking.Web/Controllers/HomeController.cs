@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using MoneyTracking.Data;
 using MoneyTracking.Data.Entities;
-using MoneyTracking.Data.UnitOfWork;
+using MoneyTracking.Web.Services.IncomeCategoryServ;
+using MoneyTracking.Web.Services.UserServ;
 
 namespace MoneyTracking.Web.Controllers
 {
@@ -10,17 +10,48 @@ namespace MoneyTracking.Web.Controllers
     public class HomeController : ControllerBase
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly MoneyTrackingContext _context;
+        private readonly IUserService _userService;
+        private readonly IIncomeCategoryService _incomeCategoryService;
 
         public HomeController(ILogger<HomeController> logger,
-            MoneyTrackingContext context,
-            IUnitOfWork unitOfWork
+            IUserService userService,
+            IIncomeCategoryService incomeCategoryService
             )
         {
             _logger = logger;
-            _context = context;
-            _unitOfWork = unitOfWork;
+            _userService = userService;
+            _incomeCategoryService = incomeCategoryService;
+        }
+
+        //Добавление пользователя
+        [HttpPost("add-user")]
+        public async Task<IActionResult> AddUser(string login, string password)
+        {
+            var newUser = new User
+            {
+                Login = login,
+                Email = "test@test.ru",
+                Password = password,
+                RegistrationDate = DateTime.UtcNow
+            };
+
+            if (newUser != null)
+            {
+                try
+                {
+                    await _userService.CreateUser(newUser);
+
+                    return Ok($"Пользователь {newUser.Login} добавлен ");
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
+            else
+            {
+                return BadRequest("Введите данные пользователя");
+            }
         }
 
         //Добавление категории
@@ -38,33 +69,16 @@ namespace MoneyTracking.Web.Controllers
             }
             else
             {
-                await _unitOfWork.IncomesCategeries.Add(newIncomeCategory);
-                await _unitOfWork.Save();
-                return Ok($"Категория {name} добавлена");
-            }
-        }
+                try
+                {
+                    await _incomeCategoryService.CreateIncomeCategory(newIncomeCategory);
 
-        //Добавление пользователя
-        [HttpPost("add-user")]
-        public async Task<IActionResult> AddUser(string login, string password)
-        {
-            var newUser = new User
-            {
-                Login = login,
-                Email = "test@test.ru",
-                Password = password,
-                RegistrationDate = DateTime.UtcNow
-            };
-
-            if (newUser != null)
-            {
-                await _unitOfWork.Users.Add(newUser);
-                await _unitOfWork.Save();
-                return Ok($"Пользователь {newUser.Login} добавлен ");
-            }
-            else
-            {
-                return BadRequest("Введите данные пользователя");
+                    return Ok($"Категория {name} добавлена");
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
         }
 
@@ -72,7 +86,7 @@ namespace MoneyTracking.Web.Controllers
         [HttpGet("get-all-users")]
         public async Task<IActionResult> GetAllUsers()
         {
-            var listUsers = await _unitOfWork.Users.GetAll();
+            var listUsers = await _userService.GetAllUsers();
             if (listUsers != null)
             {
                 return Ok(listUsers);
@@ -87,7 +101,7 @@ namespace MoneyTracking.Web.Controllers
         [HttpGet("get-user-by-id")]
         public async Task<IActionResult> GetUserById(int id)
         {
-            var user = await _unitOfWork.Users.GetById(id);
+            var user = await _userService.GetUserById(id);
 
             if (user != null)
             {
@@ -103,13 +117,20 @@ namespace MoneyTracking.Web.Controllers
         [HttpPut("update-user")]
         public async Task<IActionResult> UpdateUser(int id, string newLogin)
         {
-            var user = await _unitOfWork.Users.GetById(id);
+            var user = await _userService.GetUserById(id);
             if (user != null)
             {
-                user.Login = newLogin;
-                _unitOfWork.Users.Update(user);
-                await _unitOfWork.Save();
-                return Ok("Пользователь обновлен");
+                try
+                {
+                    user.Login = newLogin;
+                    _userService.UpdateUser(user);
+
+                    return Ok("Пользователь обновлен");
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
             else
             {
@@ -121,17 +142,14 @@ namespace MoneyTracking.Web.Controllers
         [HttpDelete("delete-user")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var user = await _unitOfWork.Users.GetById(id);
-
-            if (user != null)
+            try
             {
-                await _unitOfWork.Users.Delete(user.Id);
-                await _unitOfWork.Save();
+                await _userService.DeleteUser(id);
                 return Ok("Пользователь удален");
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest("Пользователь не найден");
+                return BadRequest(ex.Message);
             }
         }
     }
