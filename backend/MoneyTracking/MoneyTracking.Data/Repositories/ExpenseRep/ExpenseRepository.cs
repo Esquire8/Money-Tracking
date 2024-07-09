@@ -17,13 +17,9 @@ namespace MoneyTracking.Data.Repositories.ExpenseRep
             await _context.Expenses.AddAsync(entity);
         }
 
-        public async Task Delete(int id)
+        public void Delete(Expense expense)
         {
-            var expense = await GetById(id);
-            if (expense != null)
-            {
-                _context.Remove(expense);
-            }
+            _context.Remove(expense);
         }
 
         public async Task<IEnumerable<Expense>> GetAll()

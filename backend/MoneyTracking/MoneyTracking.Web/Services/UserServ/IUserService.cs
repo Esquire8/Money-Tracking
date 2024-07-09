@@ -10,8 +10,8 @@ namespace MoneyTracking.Web.Services.UserServ
 
         Task CreateUser(User user);
 
-        Task DeleteUser(int id);
+        Task DeleteUser(User user);
 
-        void UpdateUser(User user);
+        Task UpdateUser(User user);
     }
 }

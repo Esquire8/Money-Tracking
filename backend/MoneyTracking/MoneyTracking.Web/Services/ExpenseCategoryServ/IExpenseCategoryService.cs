@@ -10,8 +10,8 @@ namespace MoneyTracking.Web.Services.ExpenseCategoryServ
 
         Task CreateExpenseCategory(ExpenseCategory expenseCategory);
 
-        Task DeleteExpenseCategory(int id);
+        Task DeleteExpenseCategory(ExpenseCategory expenseCategory);
 
-        void UpdateExpenseCategory(ExpenseCategory expenseCategory);
+        Task UpdateExpenseCategory(ExpenseCategory expenseCategory);
     }
 }

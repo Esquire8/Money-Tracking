@@ -18,9 +18,9 @@ namespace MoneyTracking.Web.Services.IncomeServ
             await _unitOfWork.Save();
         }
 
-        public async Task DeleteIncome(int id)
+        public async Task DeleteIncome(Income income)
         {
-            await _unitOfWork.Incomes.Delete(id);
+            _unitOfWork.Incomes.Delete(income);
             await _unitOfWork.Save();
         }
 
@@ -29,15 +29,20 @@ namespace MoneyTracking.Web.Services.IncomeServ
             return await _unitOfWork.Incomes.GetAll();
         }
 
+        public async Task<IEnumerable<Income>> GetUserAllIncomes(int userId)
+        {
+            return await _unitOfWork.Incomes.GetUserAll(userId);
+        }
+
         public async Task<Income?> GetIncomeById(int id)
         {
             return await _unitOfWork.Incomes.GetById(id);
         }
 
-        public void UpdateIncome(Income income)
+        public async Task UpdateIncome(Income income)
         {
             _unitOfWork.Incomes.Update(income);
-            _unitOfWork.Save();
+            await _unitOfWork.Save();
         }
     }
 }

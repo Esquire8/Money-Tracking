@@ -18,9 +18,9 @@ namespace MoneyTracking.Web.Services.ExpenseServ
             await _unitOfWork.Save();
         }
 
-        public async Task DeleteExpense(int id)
+        public async Task DeleteExpense(Expense expense)
         {
-            await _unitOfWork.Expenses.Delete(id);
+            _unitOfWork.Expenses.Delete(expense);
             await _unitOfWork.Save();
         }
 
@@ -34,10 +34,10 @@ namespace MoneyTracking.Web.Services.ExpenseServ
             return await _unitOfWork.Expenses.GetById(id);
         }
 
-        public void UpdateExpense(Expense expense)
+        public async Task UpdateExpense(Expense expense)
         {
             _unitOfWork.Expenses.Update(expense);
-            _unitOfWork.Save();
+            await _unitOfWork.Save();
         }
     }
 }

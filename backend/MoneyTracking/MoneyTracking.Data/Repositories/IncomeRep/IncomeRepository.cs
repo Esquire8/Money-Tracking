@@ -12,23 +12,37 @@ namespace MoneyTracking.Data.Repositories.IncomeRep
             _context = context;
         }
 
-        public async Task Delete(int id)
+        public void Delete(Income income)
         {
-            var income = await GetById(id);
-            if (income != null)
-            {
-                _context.Incomes.Remove(income);
-            }
+            _context.Incomes.Remove(income);
         }
 
         public async Task<IEnumerable<Income>> GetAll()
         {
-            return await _context.Incomes.ToListAsync();
+            return await _context.Incomes
+                .AsNoTracking()
+                .Include(u => u.User)
+                .Include(i => i.IncomeCategory)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Income>> GetUserAll(int userId)
+        {
+            return await _context.Incomes
+                .AsNoTracking()
+                .Include(u => u.User)
+                .Include(i => i.IncomeCategory)
+                .Where(u => u.User.Id == userId)
+                .ToListAsync();
         }
 
         public async Task<Income?> GetById(int id)
         {
-            return await _context.Incomes.FindAsync(id);
+            return await _context.Incomes
+                .Include(u => u.User)
+                .Include(i => i.IncomeCategory)
+                .Where(u => u.Id == id)
+                .SingleOrDefaultAsync();
         }
 
         public async Task Add(Income entity)

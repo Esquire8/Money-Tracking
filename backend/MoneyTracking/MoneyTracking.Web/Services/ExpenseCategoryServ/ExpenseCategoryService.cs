@@ -18,9 +18,9 @@ namespace MoneyTracking.Web.Services.ExpenseCategoryServ
             await _unitOfWork.Save();
         }
 
-        public async Task DeleteExpenseCategory(int id)
+        public async Task DeleteExpenseCategory(ExpenseCategory expenseCategory)
         {
-            await _unitOfWork.ExpensesCategories.Delete(id);
+            _unitOfWork.ExpensesCategories.Delete(expenseCategory);
             await _unitOfWork.Save();
         }
 
@@ -34,10 +34,10 @@ namespace MoneyTracking.Web.Services.ExpenseCategoryServ
             return await _unitOfWork.ExpensesCategories.GetById(id);
         }
 
-        public void UpdateExpenseCategory(ExpenseCategory expenseCategory)
+        public async Task UpdateExpenseCategory(ExpenseCategory expenseCategory)
         {
             _unitOfWork.ExpensesCategories.Update(expenseCategory);
-            _unitOfWork.Save();
+            await _unitOfWork.Save();
         }
     }
 }

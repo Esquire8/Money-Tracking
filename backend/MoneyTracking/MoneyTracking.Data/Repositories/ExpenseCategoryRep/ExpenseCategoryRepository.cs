@@ -17,13 +17,9 @@ namespace MoneyTracking.Data.Repositories.ExpenseCategoryRep
             await _context.ExpenseCategories.AddAsync(entity);
         }
 
-        public async Task Delete(int id)
+        public void Delete(ExpenseCategory entity)
         {
-            var expenseCategory = await GetById(id);
-            if (expenseCategory != null)
-            {
-                _context.Remove(expenseCategory);
-            }
+            _context.Remove(entity);
         }
 
         public async Task<IEnumerable<ExpenseCategory>> GetAll()

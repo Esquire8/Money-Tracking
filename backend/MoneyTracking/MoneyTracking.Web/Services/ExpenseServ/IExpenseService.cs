@@ -10,8 +10,8 @@ namespace MoneyTracking.Web.Services.ExpenseServ
 
         Task CreateExpense(Expense expense);
 
-        Task DeleteExpense(int id);
+        Task DeleteExpense(Expense expense);
 
-        void UpdateExpense(Expense expense);
+        Task UpdateExpense(Expense expense);
     }
 }

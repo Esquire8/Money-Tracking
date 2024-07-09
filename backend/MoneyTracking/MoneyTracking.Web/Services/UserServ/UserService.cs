@@ -18,9 +18,9 @@ namespace MoneyTracking.Web.Services.UserServ
             await _unitOfWork.Save();
         }
 
-        public async Task DeleteUser(int id)
+        public async Task DeleteUser(User user)
         {
-            await _unitOfWork.Users.Delete(id);
+            _unitOfWork.Users.Delete(user);
             await _unitOfWork.Save();
         }
 
@@ -34,10 +34,10 @@ namespace MoneyTracking.Web.Services.UserServ
             return await _unitOfWork.Users.GetById(id);
         }
 
-        public void UpdateUser(User user)
+        public async Task UpdateUser(User user)
         {
             _unitOfWork.Users.Update(user);
-            _unitOfWork.Save();
+            await _unitOfWork.Save();
         }
     }
 }

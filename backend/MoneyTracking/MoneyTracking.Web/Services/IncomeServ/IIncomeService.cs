@@ -6,12 +6,14 @@ namespace MoneyTracking.Web.Services.IncomeServ
     {
         Task<IEnumerable<Income>> GetAllIncomes();
 
+        Task<IEnumerable<Income>> GetUserAllIncomes(int userId);
+
         Task<Income?> GetIncomeById(int id);
 
         Task CreateIncome(Income income);
 
-        Task DeleteIncome(int id);
+        Task DeleteIncome(Income income);
 
-        void UpdateIncome(Income income);
+        Task UpdateIncome(Income income);
     }
 }

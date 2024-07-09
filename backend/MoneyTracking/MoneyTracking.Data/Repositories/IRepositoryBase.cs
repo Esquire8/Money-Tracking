@@ -10,7 +10,7 @@
 
         void Update(T entity);
 
-        Task Delete(int id);
+        void Delete(T entity);
 
         Task Save();
     }

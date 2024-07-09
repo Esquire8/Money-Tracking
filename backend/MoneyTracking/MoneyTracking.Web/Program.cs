@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MoneyTracking.Data;
 using MoneyTracking.Web.Setup;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -9,7 +10,12 @@ var configuration = builder.Configuration;
 builder.Services.AddDataDependencies();
 builder.Services.AddServiceDependencies();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(x => x.AllowEmptyInputInBodyModelBinding = true); // AllowEmptyInputInBodyModelBinding - могу в теле запроса передавать null
+
+// поддержка объектного цикла
+builder.Services.AddControllersWithViews()
+    .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
