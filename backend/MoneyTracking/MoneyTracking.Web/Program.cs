@@ -10,8 +10,6 @@ var configuration = builder.Configuration;
 builder.Services.AddDataDependencies();
 builder.Services.AddServiceDependencies();
 
-builder.Services.AddControllers(x => x.AllowEmptyInputInBodyModelBinding = true); // AllowEmptyInputInBodyModelBinding - могу в теле запроса передавать null
-
 // поддержка объектного цикла
 builder.Services.AddControllersWithViews()
     .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);

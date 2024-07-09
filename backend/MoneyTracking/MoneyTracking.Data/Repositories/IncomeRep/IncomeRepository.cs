@@ -26,7 +26,7 @@ namespace MoneyTracking.Data.Repositories.IncomeRep
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Income>> GetUserAll(int userId)
+        public async Task<IEnumerable<Income>> GetAllByUser(int userId)
         {
             return await _context.Incomes
                 .AsNoTracking()

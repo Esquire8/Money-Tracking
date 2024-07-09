@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MoneyTracking.Data.Entities;
 using MoneyTracking.Web.Models.UserModels;
 using MoneyTracking.Web.Services.UserServ;
 
@@ -16,7 +15,7 @@ namespace MoneyTracking.Web.Controllers
             _userService = userService;
         }
 
-        // список всех пользователей
+        // получить список всех пользователей
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -28,11 +27,11 @@ namespace MoneyTracking.Web.Controllers
             }
             else
             {
-                return BadRequest("Нет пользователей");
+                return NotFound("Нет пользователей");
             }
         }
 
-        // найти конкретного пользователя
+        // получить конкретного пользователя
         [HttpGet]
         public async Task<IActionResult> GetUserById(int id)
         {
@@ -40,11 +39,11 @@ namespace MoneyTracking.Web.Controllers
 
             if (user != null)
             {
-                return Ok(user.Login);
+                return Ok($"Пользователь существует : {user.Login}");
             }
             else
             {
-                return BadRequest("Пользователь не найден");
+                return NotFound("Пользователь не найден");
             }
         }
 
@@ -52,21 +51,13 @@ namespace MoneyTracking.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddUser([FromBody] UserAdd user)
         {
-            var newUser = new User
-            {
-                Login = user.Login,
-                Email = user.Email,
-                Password = user.Password,
-                RegistrationDate = DateTime.UtcNow
-            };
-
-            if (newUser != null)
+            if (user != null)
             {
                 try
                 {
-                    await _userService.CreateUser(newUser);
+                    await _userService.CreateUser(user);
 
-                    return Ok($"Пользователь {newUser.Login} добавлен ");
+                    return Ok($"Пользователь {user.Login} добавлен ");
                 }
                 catch (Exception ex)
                 {
@@ -75,7 +66,7 @@ namespace MoneyTracking.Web.Controllers
             }
             else
             {
-                return BadRequest("Введите данные пользователя");
+                return BadRequest("Введите данные пользователя!");
             }
         }
 
@@ -83,19 +74,13 @@ namespace MoneyTracking.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateUser([FromBody] UserUpdate userUpdate)
         {
-            var user = await _userService.GetUserById(userUpdate.Id);
-
-            if (user != null)
+            if (userUpdate != null)
             {
                 try
                 {
-                    user.Login = userUpdate.NewLogin;
-                    user.Email = userUpdate.NewEmail;
-                    user.Password = userUpdate.NewPassword;
+                    await _userService.UpdateUser(userUpdate);
 
-                    await _userService.UpdateUser(user);
-
-                    return Ok("Пользователь обновлен");
+                    return Ok($"Пользователь {userUpdate.NewLogin} обновлен");
                 }
                 catch (Exception ex)
                 {
@@ -104,31 +89,22 @@ namespace MoneyTracking.Web.Controllers
             }
             else
             {
-                return BadRequest("Пользователь не найден");
+                return BadRequest("Введите данные пользователя для обновления");
             }
         }
 
         // удалить пользователя
         [HttpDelete]
-        public async Task<IActionResult> DeleteUser(int id)
+        public async Task<IActionResult> DeleteUser(int userId)
         {
-            var user = await _userService.GetUserById(id);
-
-            if (user != null)
+            try
             {
-                try
-                {
-                    await _userService.DeleteUser(user);
-                    return Ok("Пользователь удален");
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+                await _userService.DeleteUser(userId);
+                return Ok("Пользователь удален");
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest("Пользователь не найден");
+                return BadRequest(ex.Message);
             }
         }
     }

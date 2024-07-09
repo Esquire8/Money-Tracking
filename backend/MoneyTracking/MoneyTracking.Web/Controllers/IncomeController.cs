@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MoneyTracking.Data.Entities;
 using MoneyTracking.Web.Models.IncomeModels;
 using MoneyTracking.Web.Services.IncomeCategoryServ;
 using MoneyTracking.Web.Services.IncomeServ;
@@ -26,44 +25,26 @@ namespace MoneyTracking.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddIncome([FromBody] IncomeAdd incomeAdd)
         {
-            var user = await _userService.GetUserById(incomeAdd.UserId);
-            var incomeCategory = await _incomeCategoryService.GetIncomeCategoryById(incomeAdd.IncomeCategoryId);
-
-            if (user != null && incomeCategory != null)
+            if (incomeAdd != null)
             {
-                var income = new Income()
+                try
                 {
-                    Amount = incomeAdd.Amount,
-                    Description = incomeAdd.Description,
-                    IncomeDate = DateTime.UtcNow,
-                    User = user,
-                    IncomeCategory = incomeCategory
-                };
+                    await _incomeService.CreateIncome(incomeAdd);
 
-                if (incomeAdd != null)
-                {
-                    try
-                    {
-                        await _incomeService.CreateIncome(income);
-
-                        return Ok();
-                    }
-                    catch (Exception ex)
-                    {
-                        return BadRequest(ex.Message);
-                    }
+                    return Ok($"Доход добавлен {incomeAdd}");
                 }
-                else
+                catch (Exception ex)
                 {
-                    return BadRequest("Введите данные о доходе!");
+                    return BadRequest(ex.Message);
                 }
             }
             else
             {
-                return BadRequest("Пользователь не существует!");
+                return BadRequest("Введите данные о доходе!");
             }
         }
 
+        // получить все доходы
         [HttpGet]
         public async Task<IActionResult> GetAllIncomes()
         {
@@ -74,21 +55,21 @@ namespace MoneyTracking.Web.Controllers
             {
                 foreach (var income in listIncomes)
                 {
-                    resultList.Add($" Id : {income.Id}, Сумма : {income.Amount}, Описание : {income.Description}, ДатаСоздания : {income.IncomeDate}, Пользователь : {income.User.Login}, Категория : {income.IncomeCategory.Name}");
+                    resultList.Add($" Id : {income.Id}, Сумма : {income.Amount}, Описание : {income.Description}, ДатаСоздания : {income.IncomeDate}, Пользователь : ({income.User.Id} {income.User.Login}), Категория : {income.IncomeCategory.Name}");
                 }
                 return Ok(resultList);
             }
             else
             {
-                return BadRequest("Доходов нет!");
+                return NotFound("Доходы не найдены!");
             }
         }
 
-        // список доходов пользователя
+        // получить все доходы пользователя
         [HttpGet]
         public async Task<IActionResult> GetUserIncomes(int userId)
         {
-            var listIncome = await _incomeService.GetUserAllIncomes(userId);
+            var listIncome = await _incomeService.GetAllIncomesByUser(userId);
 
             var resultList = new List<string>();
 
@@ -96,23 +77,18 @@ namespace MoneyTracking.Web.Controllers
             {
                 foreach (var income in listIncome)
                 {
-                    if (income.Description == null)
-                    {
-                        income.Description = "Описание отсутствует";
-                    }
-
-                    resultList.Add($"Пользователь: {income.User.Login}, Сумма: {income.Amount}, Категория: {income.IncomeCategory.Name}, Описание: {income.Description}, Дата: {income.IncomeDate.ToShortDateString()}");
+                    resultList.Add($"Пользователь: {income.User.Login}, Сумма: {income.Amount}, Категория: {income.IncomeCategory.Name}, Описание: {income.Description}, Дата и время: {income.IncomeDate.ToShortDateString()} в {income.IncomeDate.ToShortTimeString()}");
                 }
 
                 return Ok(resultList);
             }
             else
             {
-                return BadRequest("Доходов вообще ни у кого нет)");
+                return NotFound("Доходов вообще ни у кого нет)");
             }
         }
 
-        // найти доход по id
+        // получить доход по id
         [HttpGet]
         public async Task<IActionResult> GetIncomeById(int id)
         {
@@ -120,16 +96,11 @@ namespace MoneyTracking.Web.Controllers
 
             if (income != null)
             {
-                if (income.Description == null)
-                {
-                    income.Description = "Описание отсутствует";
-                }
-
                 return Ok($"Пользователь: {income.User.Login}, Сумма: {income.Amount}, Категория: {income.IncomeCategory.Name}, Описание: {income.Description}, Дата: {income.IncomeDate.ToShortDateString()}");
             }
             else
             {
-                return BadRequest("Дохода не существует!");
+                return NotFound("Дохода не существует!");
             }
         }
 
@@ -137,27 +108,13 @@ namespace MoneyTracking.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateIncome([FromBody] IncomeUpdate incomeUpdate)
         {
-            var toUpdateIncome = await _incomeService.GetIncomeById(incomeUpdate.ToUpdateIncomeId);
-            var updateIncomeCategory = await _incomeCategoryService.GetIncomeCategoryById(incomeUpdate.UpdateIncomeCategoryId);
-
-            if (toUpdateIncome != null && updateIncomeCategory != null)
+            if (incomeUpdate != null)
             {
-                toUpdateIncome.IncomeCategory = updateIncomeCategory;
-
-                // пробовал передать null в теле POST, но выдает 400 ошибку, добавил AllowEmptyInputInBodyModelBinding в program.cs в AddControllers и это тоже не помогло, пока так оставлю
-                if (toUpdateIncome.Description == string.Empty)
-                {
-                    toUpdateIncome.Description = null;
-                }
-                else { toUpdateIncome.Description = incomeUpdate.Description; }
-
-                toUpdateIncome.Amount = incomeUpdate.Amount;
-
                 try
                 {
-                    await _incomeService.UpdateIncome(toUpdateIncome);
+                    await _incomeService.UpdateIncome(incomeUpdate);
 
-                    return Ok("Все хорошо");
+                    return Ok("Данные о доходе обновлены");
                 }
                 catch (Exception ex)
                 {
@@ -166,31 +123,22 @@ namespace MoneyTracking.Web.Controllers
             }
             else
             {
-                return BadRequest("Доход не найден!");
+                return BadRequest("Введите данные дохода для обновления");
             }
         }
 
         // удалить доход
         [HttpDelete]
-        public async Task<IActionResult> DeleteIncome(int id)
+        public async Task<IActionResult> DeleteIncome(int incomeId)
         {
-            var income = await _incomeService.GetIncomeById(id);
-
-            if (income != null)
+            try
             {
-                try
-                {
-                    await _incomeService.DeleteIncome(income);
-                    return Ok("Запись о доходе удалена");
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+                await _incomeService.DeleteIncome(incomeId);
+                return Ok("Запись о доходе удалена");
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest("Дохода не существует");
+                return BadRequest(ex.Message);
             }
         }
     }

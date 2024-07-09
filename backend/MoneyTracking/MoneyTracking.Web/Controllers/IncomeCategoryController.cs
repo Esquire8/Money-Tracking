@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MoneyTracking.Data.Entities;
 using MoneyTracking.Web.Models.IncomeCategoryModels;
 using MoneyTracking.Web.Services.IncomeCategoryServ;
 
@@ -16,15 +15,14 @@ namespace MoneyTracking.Web.Controllers
             _incomeCategoryService = incomeCategoryService;
         }
 
+        // добавить категорию дохода
         [HttpPost]
-        public async Task<IActionResult> AddIncomeCategory(string categoryName)
+        public async Task<IActionResult> AddIncomeCategory(string CategoryName)
         {
-            var incomeCategory = new IncomeCategory { Name = categoryName };
-
             try
             {
-                await _incomeCategoryService.CreateIncomeCategory(incomeCategory);
-                return Ok($"Категория id = {incomeCategory.Id}, Название = {incomeCategory.Name}");
+                await _incomeCategoryService.CreateIncomeCategory(CategoryName);
+                return Ok($"Категория {CategoryName} добавлена!");
             }
             catch (Exception ex)
             {
@@ -32,6 +30,7 @@ namespace MoneyTracking.Web.Controllers
             }
         }
 
+        // получить все категории дохода
         [HttpGet]
         public async Task<IActionResult> GetAllIncomeCategories()
         {
@@ -43,22 +42,20 @@ namespace MoneyTracking.Web.Controllers
             }
             else
             {
-                return BadRequest("Не найдено ни одной категории дохода");
+                return NotFound("Не найдено ни одной категории дохода");
             }
         }
 
+        // обновить категорию дохода
         [HttpPost]
-        public async Task<IActionResult> UpdateIncomeCategory([FromBody] IncomeCategoryUpdate incomeCtgryUpdate)
+        public async Task<IActionResult> UpdateIncomeCategory([FromBody] IncomeCategoryUpdate request)
         {
-            var incomeCategory = await _incomeCategoryService.GetIncomeCategoryById(incomeCtgryUpdate.IncomeCategoryId);
-            var updateIncomeCategory = new IncomeCategory() { Name = incomeCtgryUpdate.UpdateIncomeCategoryName };
-
-            if (incomeCategory != null)
+            if (request != null)
             {
                 try
                 {
-                    await _incomeCategoryService.UpdateIncomeCategory(updateIncomeCategory);
-                    return Ok("Категория обновлена");
+                    await _incomeCategoryService.UpdateIncomeCategory(request);
+                    return Ok($"Категория Id : {request.IncomeCategoryId}, Name : {request.UpdateIncomeCategoryName} обновлена");
                 }
                 catch (Exception ex)
                 {
@@ -67,30 +64,22 @@ namespace MoneyTracking.Web.Controllers
             }
             else
             {
-                return BadRequest("Категория не найдена");
+                return BadRequest("Введите название категории");
             }
         }
 
+        // удалить категорию дохода
         [HttpDelete]
-        public async Task<IActionResult> DeleteIncomeCategory(int incomeCtgryId)
+        public async Task<IActionResult> DeleteIncomeCategory(int incomeCategoryId)
         {
-            var incomeCtgry = await _incomeCategoryService.GetIncomeCategoryById(incomeCtgryId);
-
-            if (incomeCtgry != null)
+            try
             {
-                try
-                {
-                    await _incomeCategoryService.DeleteIncomeCategory(incomeCtgry);
-                    return Ok("Категория удалена");
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+                await _incomeCategoryService.DeleteIncomeCategory(incomeCategoryId);
+                return Ok("Категория удалена");
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest("Категория не найдена");
+                return BadRequest(ex.Message);
             }
         }
     }

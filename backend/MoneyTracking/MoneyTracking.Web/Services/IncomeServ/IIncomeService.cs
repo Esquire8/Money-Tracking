@@ -1,4 +1,5 @@
 ﻿using MoneyTracking.Data.Entities;
+using MoneyTracking.Web.Models.IncomeModels;
 
 namespace MoneyTracking.Web.Services.IncomeServ
 {
@@ -6,14 +7,14 @@ namespace MoneyTracking.Web.Services.IncomeServ
     {
         Task<IEnumerable<Income>> GetAllIncomes();
 
-        Task<IEnumerable<Income>> GetUserAllIncomes(int userId);
+        Task<IEnumerable<Income>> GetAllIncomesByUser(int userId);
 
         Task<Income?> GetIncomeById(int id);
 
-        Task CreateIncome(Income income);
+        Task CreateIncome(IncomeAdd incomeAdd);
 
-        Task DeleteIncome(Income income);
+        Task DeleteIncome(int incomeId);
 
-        Task UpdateIncome(Income income);
+        Task UpdateIncome(IncomeUpdate incomeUpdate);
     }
 }

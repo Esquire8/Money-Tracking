@@ -1,4 +1,5 @@
 ﻿using MoneyTracking.Data.Entities;
+using MoneyTracking.Web.Models.UserModels;
 
 namespace MoneyTracking.Web.Services.UserServ
 {
@@ -8,10 +9,10 @@ namespace MoneyTracking.Web.Services.UserServ
 
         Task<User?> GetUserById(int id);
 
-        Task CreateUser(User user);
+        Task CreateUser(UserAdd user);
 
-        Task DeleteUser(User user);
+        Task DeleteUser(int userId);
 
-        Task UpdateUser(User user);
+        Task UpdateUser(UserUpdate userUpdate);
     }
 }

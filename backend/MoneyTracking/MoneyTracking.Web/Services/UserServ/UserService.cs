@@ -1,5 +1,6 @@
 ﻿using MoneyTracking.Data.Entities;
 using MoneyTracking.Data.UnitOfWork;
+using MoneyTracking.Web.Models.UserModels;
 
 namespace MoneyTracking.Web.Services.UserServ
 {
@@ -12,14 +13,24 @@ namespace MoneyTracking.Web.Services.UserServ
             _unitOfWork = unitOfWork;
         }
 
-        public async Task CreateUser(User user)
+        public async Task CreateUser(UserAdd user)
         {
-            await _unitOfWork.Users.Add(user);
+            User newUser = new User
+            {
+                Login = user.Login,
+                Email = user.Email,
+                Password = user.Password,
+                RegistrationDate = DateTime.UtcNow
+            };
+
+            await _unitOfWork.Users.Add(newUser);
             await _unitOfWork.Save();
         }
 
-        public async Task DeleteUser(User user)
+        public async Task DeleteUser(int userId)
         {
+            var user = await GetUserById(userId) ?? throw new Exception("Пользователь не найден!");
+
             _unitOfWork.Users.Delete(user);
             await _unitOfWork.Save();
         }
@@ -34,8 +45,14 @@ namespace MoneyTracking.Web.Services.UserServ
             return await _unitOfWork.Users.GetById(id);
         }
 
-        public async Task UpdateUser(User user)
+        public async Task UpdateUser(UserUpdate userUpdate)
         {
+            var user = await GetUserById(userUpdate.Id) ?? throw new Exception();
+
+            user.Login = userUpdate.NewLogin;
+            user.Email = userUpdate.NewEmail;
+            user.Password = userUpdate.NewPassword;
+
             _unitOfWork.Users.Update(user);
             await _unitOfWork.Save();
         }
