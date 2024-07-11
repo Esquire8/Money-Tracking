@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MoneyTracking.Web.Models.IncomeModels;
-using MoneyTracking.Web.Services.IncomeCategoryServ;
 using MoneyTracking.Web.Services.IncomeServ;
-using MoneyTracking.Web.Services.UserServ;
+using System.Globalization;
 
 namespace MoneyTracking.Web.Controllers
 {
@@ -11,21 +10,17 @@ namespace MoneyTracking.Web.Controllers
     public class IncomeController : ControllerBase
     {
         private readonly IIncomeService _incomeService;
-        private readonly IUserService _userService;
-        private readonly IIncomeCategoryService _incomeCategoryService;
 
-        public IncomeController(IIncomeService incomeService, IUserService userService, IIncomeCategoryService incomeCategoryService)
+        public IncomeController(IIncomeService incomeService)
         {
             _incomeService = incomeService;
-            _userService = userService;
-            _incomeCategoryService = incomeCategoryService;
         }
 
         // добавить доход
         [HttpPost]
         public async Task<IActionResult> AddIncome([FromBody] IncomeAdd incomeAdd)
         {
-            if (incomeAdd != null)
+            if (ModelState.IsValid)
             {
                 try
                 {
@@ -40,7 +35,7 @@ namespace MoneyTracking.Web.Controllers
             }
             else
             {
-                return BadRequest("Введите данные о доходе!");
+                return BadRequest(ModelState);
             }
         }
 
@@ -51,11 +46,11 @@ namespace MoneyTracking.Web.Controllers
             var listIncomes = await _incomeService.GetAllIncomes();
             var resultList = new List<string>();
 
-            if (listIncomes != null)
+            if (listIncomes.Any())
             {
                 foreach (var income in listIncomes)
                 {
-                    resultList.Add($" Id : {income.Id}, Сумма : {income.Amount}, Описание : {income.Description}, ДатаСоздания : {income.IncomeDate}, Пользователь : ({income.User.Id} {income.User.Login}), Категория : {income.IncomeCategory.Name}");
+                    resultList.Add($"Id : {income.Id}, Сумма : {income.Amount}, Описание : {income.Description}, ДатаСоздания : {income.IncomeDate}, Пользователь : ({income.User.Id} {income.User.Login}), Категория : {income.IncomeCategory.Name}");
                 }
                 return Ok(resultList);
             }
@@ -73,18 +68,18 @@ namespace MoneyTracking.Web.Controllers
 
             var resultList = new List<string>();
 
-            if (listIncome != null)
+            if (listIncome.Any())
             {
                 foreach (var income in listIncome)
                 {
-                    resultList.Add($"Пользователь: {income.User.Login}, Сумма: {income.Amount}, Категория: {income.IncomeCategory.Name}, Описание: {income.Description}, Дата и время: {income.IncomeDate.ToShortDateString()} в {income.IncomeDate.ToShortTimeString()}");
+                    resultList.Add($"Пользователь: {income.User.Login}, Сумма: {income.Amount}, Категория: {income.IncomeCategory.Name}, Описание: {income.Description}, Дата и время: {income.IncomeDate.ToString("g", CultureInfo.GetCultureInfo("ru-RU"))}");
                 }
 
                 return Ok(resultList);
             }
             else
             {
-                return NotFound("Доходов вообще ни у кого нет)");
+                return NotFound("У вас нет доходов!");
             }
         }
 
@@ -96,7 +91,7 @@ namespace MoneyTracking.Web.Controllers
 
             if (income != null)
             {
-                return Ok($"Пользователь: {income.User.Login}, Сумма: {income.Amount}, Категория: {income.IncomeCategory.Name}, Описание: {income.Description}, Дата: {income.IncomeDate.ToShortDateString()}");
+                return Ok($"Пользователь: {income.User.Login}, Сумма: {income.Amount}, Категория: {income.IncomeCategory.Name}, Описание: {income.Description}, Дата: {income.IncomeDate.ToString("g", CultureInfo.GetCultureInfo("ru-RU"))}");
             }
             else
             {
@@ -108,7 +103,7 @@ namespace MoneyTracking.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateIncome([FromBody] IncomeUpdate incomeUpdate)
         {
-            if (incomeUpdate != null)
+            if (ModelState.IsValid)
             {
                 try
                 {
@@ -123,7 +118,7 @@ namespace MoneyTracking.Web.Controllers
             }
             else
             {
-                return BadRequest("Введите данные дохода для обновления");
+                return BadRequest(ModelState);
             }
         }
 

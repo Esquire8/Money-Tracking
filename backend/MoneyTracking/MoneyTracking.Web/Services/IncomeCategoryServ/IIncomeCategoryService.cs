@@ -9,10 +9,10 @@ namespace MoneyTracking.Web.Services.IncomeCategoryServ
 
         Task<IncomeCategory?> GetIncomeCategoryById(int id);
 
-        Task CreateIncomeCategory(string CategoryName);
+        Task CreateIncomeCategory(string categoryName);
 
-        Task DeleteIncomeCategory(int CategoryId);
+        Task DeleteIncomeCategory(int categoryId);
 
-        Task UpdateIncomeCategory(IncomeCategoryUpdate incomeCategoryUpdate);
+        Task UpdateIncomeCategory(IncomeCategoryUpdate incomeCategory);
     }
 }

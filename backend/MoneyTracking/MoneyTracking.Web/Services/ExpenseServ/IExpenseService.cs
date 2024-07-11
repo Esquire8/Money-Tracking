@@ -1,4 +1,5 @@
 ﻿using MoneyTracking.Data.Entities;
+using MoneyTracking.Web.Models.ExpenseModels;
 
 namespace MoneyTracking.Web.Services.ExpenseServ
 {
@@ -6,12 +7,14 @@ namespace MoneyTracking.Web.Services.ExpenseServ
     {
         Task<IEnumerable<Expense>> GetAllExpenses();
 
+        Task<IEnumerable<Expense>> GetAllExpensesByUser(int userId);
+
         Task<Expense?> GetExpenseById(int id);
 
-        Task CreateExpense(Expense expense);
+        Task CreateExpense(ExpenseAdd newExpense);
 
-        Task DeleteExpense(Expense expense);
+        Task DeleteExpense(int expenseId);
 
-        Task UpdateExpense(Expense expense);
+        Task UpdateExpense(ExpenseUpdate expense);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using MoneyTracking.Data.Entities;
+using MoneyTracking.Web.Models.ExpenseCategoryModels;
 
 namespace MoneyTracking.Web.Services.ExpenseCategoryServ
 {
@@ -8,10 +9,10 @@ namespace MoneyTracking.Web.Services.ExpenseCategoryServ
 
         Task<ExpenseCategory?> GetExpenseCategoryById(int id);
 
-        Task CreateExpenseCategory(ExpenseCategory expenseCategory);
+        Task CreateExpenseCategory(ExpenseCategoryAdd newExpenseCategory);
 
-        Task DeleteExpenseCategory(ExpenseCategory expenseCategory);
+        Task DeleteExpenseCategory(int categoryId);
 
-        Task UpdateExpenseCategory(ExpenseCategory expenseCategory);
+        Task UpdateExpenseCategory(ExpenseCategoryUpdate expenseCategory);
     }
 }

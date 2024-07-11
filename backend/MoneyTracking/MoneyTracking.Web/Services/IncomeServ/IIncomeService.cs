@@ -11,10 +11,10 @@ namespace MoneyTracking.Web.Services.IncomeServ
 
         Task<Income?> GetIncomeById(int id);
 
-        Task CreateIncome(IncomeAdd incomeAdd);
+        Task CreateIncome(IncomeAdd newIncome);
 
         Task DeleteIncome(int incomeId);
 
-        Task UpdateIncome(IncomeUpdate incomeUpdate);
+        Task UpdateIncome(IncomeUpdate income);
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace MoneyTracking.Web.Models.IncomeModels
 {
-    public record IncomeUpdate(int ToUpdateIncomeId, string? Description, decimal Amount, int UpdateIncomeCategoryId)
+    public record IncomeUpdate(int IncomeId, string? Description, decimal Amount, int IncomeCategoryId)
     {
     }
 }

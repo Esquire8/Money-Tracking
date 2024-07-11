@@ -17,12 +17,12 @@ namespace MoneyTracking.Web.Controllers
 
         // добавить категорию дохода
         [HttpPost]
-        public async Task<IActionResult> AddIncomeCategory(string CategoryName)
+        public async Task<IActionResult> AddIncomeCategory(string categoryName)
         {
             try
             {
-                await _incomeCategoryService.CreateIncomeCategory(CategoryName);
-                return Ok($"Категория {CategoryName} добавлена!");
+                await _incomeCategoryService.CreateIncomeCategory(categoryName);
+                return Ok($"Категория {categoryName} добавлена");
             }
             catch (Exception ex)
             {
@@ -30,19 +30,19 @@ namespace MoneyTracking.Web.Controllers
             }
         }
 
-        // получить все категории дохода
+        // получить все категории доходов
         [HttpGet]
         public async Task<IActionResult> GetAllIncomeCategories()
         {
-            var listIncomeCat = await _incomeCategoryService.GetAllIncomeCategories();
+            var listIncomeCategory = await _incomeCategoryService.GetAllIncomeCategories();
 
-            if (listIncomeCat != null)
+            if (listIncomeCategory.Any())
             {
-                return Ok(listIncomeCat);
+                return Ok(listIncomeCategory);
             }
             else
             {
-                return NotFound("Не найдено ни одной категории дохода");
+                return NotFound("Не найдено ни одной категории дохода!");
             }
         }
 
@@ -50,7 +50,7 @@ namespace MoneyTracking.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateIncomeCategory([FromBody] IncomeCategoryUpdate request)
         {
-            if (request != null)
+            if (ModelState.IsValid)
             {
                 try
                 {
@@ -64,7 +64,7 @@ namespace MoneyTracking.Web.Controllers
             }
             else
             {
-                return BadRequest("Введите название категории");
+                return BadRequest(ModelState);
             }
         }
 

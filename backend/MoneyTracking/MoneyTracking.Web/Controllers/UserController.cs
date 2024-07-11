@@ -21,13 +21,13 @@ namespace MoneyTracking.Web.Controllers
         {
             var listUsers = await _userService.GetAllUsers();
 
-            if (listUsers != null)
+            if (listUsers.Any())
             {
                 return Ok(listUsers);
             }
             else
             {
-                return NotFound("Нет пользователей");
+                return NotFound("Нет пользователей!");
             }
         }
 
@@ -43,7 +43,7 @@ namespace MoneyTracking.Web.Controllers
             }
             else
             {
-                return NotFound("Пользователь не найден");
+                return NotFound("Пользователь не найден!");
             }
         }
 
@@ -51,13 +51,13 @@ namespace MoneyTracking.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddUser([FromBody] UserAdd user)
         {
-            if (user != null)
+            if (ModelState.IsValid)
             {
                 try
                 {
                     await _userService.CreateUser(user);
 
-                    return Ok($"Пользователь {user.Login} добавлен ");
+                    return Ok($"Пользователь {user.Login} добавлен");
                 }
                 catch (Exception ex)
                 {
@@ -66,7 +66,7 @@ namespace MoneyTracking.Web.Controllers
             }
             else
             {
-                return BadRequest("Введите данные пользователя!");
+                return BadRequest(ModelState);
             }
         }
 
@@ -74,7 +74,7 @@ namespace MoneyTracking.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateUser([FromBody] UserUpdate userUpdate)
         {
-            if (userUpdate != null)
+            if (ModelState.IsValid)
             {
                 try
                 {
@@ -89,7 +89,7 @@ namespace MoneyTracking.Web.Controllers
             }
             else
             {
-                return BadRequest("Введите данные пользователя для обновления");
+                return BadRequest(ModelState);
             }
         }
 

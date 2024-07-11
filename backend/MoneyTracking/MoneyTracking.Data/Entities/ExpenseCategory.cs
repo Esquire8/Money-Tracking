@@ -8,7 +8,7 @@ namespace MoneyTracking.Data.Entities
 
         public string Name { get; set; } = null!;
 
-        public int Parentid { get; set; }
+        public int? Parentid { get; set; }
 
         public List<Expense> Expenses { get; set; } = [];
     }

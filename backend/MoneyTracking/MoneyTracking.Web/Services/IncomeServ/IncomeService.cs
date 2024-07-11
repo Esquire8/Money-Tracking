@@ -13,15 +13,15 @@ namespace MoneyTracking.Web.Services.IncomeServ
             _unitOfWork = unitOfWork;
         }
 
-        public async Task CreateIncome(IncomeAdd incomeAdd)
+        public async Task CreateIncome(IncomeAdd newIncome)
         {
-            var user = await _unitOfWork.Users.GetById(incomeAdd.UserId) ?? throw new Exception();
-            var incomeCategory = await _unitOfWork.IncomesCategeries.GetById(incomeAdd.IncomeCategoryId) ?? throw new Exception();
+            var user = await _unitOfWork.Users.GetById(newIncome.UserId) ?? throw new Exception();
+            var incomeCategory = await _unitOfWork.IncomesCategeries.GetById(newIncome.IncomeCategoryId) ?? throw new Exception();
 
             var income = new Income()
             {
-                Amount = incomeAdd.Amount,
-                Description = incomeAdd.Description,
+                Amount = newIncome.Amount,
+                Description = newIncome.Description,
                 IncomeDate = DateTime.UtcNow,
                 User = user,
                 IncomeCategory = incomeCategory
@@ -54,16 +54,16 @@ namespace MoneyTracking.Web.Services.IncomeServ
             return await _unitOfWork.Incomes.GetById(id);
         }
 
-        public async Task UpdateIncome(IncomeUpdate incomeUpdate)
+        public async Task UpdateIncome(IncomeUpdate income)
         {
-            var toUpdateIncome = await GetIncomeById(incomeUpdate.ToUpdateIncomeId) ?? throw new Exception();
-            var updateIncomeCategory = await _unitOfWork.IncomesCategeries.GetById(incomeUpdate.UpdateIncomeCategoryId) ?? throw new Exception();
+            var updateIncome = await GetIncomeById(income.IncomeId) ?? throw new Exception();
+            var updateIncomeCategory = await _unitOfWork.IncomesCategeries.GetById(income.IncomeCategoryId) ?? throw new Exception();
 
-            toUpdateIncome.IncomeCategory = updateIncomeCategory;
-            toUpdateIncome.Description = incomeUpdate.Description;
-            toUpdateIncome.Amount = incomeUpdate.Amount;
+            updateIncome.IncomeCategory = updateIncomeCategory;
+            updateIncome.Description = income.Description;
+            updateIncome.Amount = income.Amount;
 
-            _unitOfWork.Incomes.Update(toUpdateIncome);
+            _unitOfWork.Incomes.Update(updateIncome);
             await _unitOfWork.Save();
         }
     }

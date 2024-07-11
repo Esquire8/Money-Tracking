@@ -47,7 +47,7 @@ namespace MoneyTracking.Web.Services.UserServ
 
         public async Task UpdateUser(UserUpdate userUpdate)
         {
-            var user = await GetUserById(userUpdate.Id) ?? throw new Exception();
+            var user = await GetUserById(userUpdate.Id) ?? throw new Exception("Пользователь не найден!");
 
             user.Login = userUpdate.NewLogin;
             user.Email = userUpdate.NewEmail;
