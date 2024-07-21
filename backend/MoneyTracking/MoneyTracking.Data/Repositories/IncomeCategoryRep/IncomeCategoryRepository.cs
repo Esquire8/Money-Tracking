@@ -12,13 +12,9 @@ namespace MoneyTracking.Data.Repositories.IncomeCategoryRep
             _context = context;
         }
 
-        public async Task Delete(int id)
+        public void Delete(IncomeCategory incomeCategory)
         {
-            var incomeCategory = await GetById(id);
-            if (incomeCategory != null)
-            {
-                _context.IncomeCategories.Remove(incomeCategory);
-            }
+            _context.IncomeCategories.Remove(incomeCategory);
         }
 
         public async Task<IEnumerable<IncomeCategory>> GetAll()

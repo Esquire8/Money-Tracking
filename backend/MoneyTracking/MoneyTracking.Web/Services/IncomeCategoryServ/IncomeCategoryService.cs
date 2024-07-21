@@ -1,5 +1,6 @@
 ﻿using MoneyTracking.Data.Entities;
 using MoneyTracking.Data.UnitOfWork;
+using MoneyTracking.Web.Models.IncomeCategoryModels;
 
 namespace MoneyTracking.Web.Services.IncomeCategoryServ
 {
@@ -12,15 +13,19 @@ namespace MoneyTracking.Web.Services.IncomeCategoryServ
             _unitOfWork = unitOfWork;
         }
 
-        public async Task CreateIncomeCategory(IncomeCategory incomeCategory)
+        public async Task CreateIncomeCategory(string categoryName)
         {
+            var incomeCategory = new IncomeCategory { Name = categoryName };
+
             await _unitOfWork.IncomesCategeries.Add(incomeCategory);
             await _unitOfWork.Save();
         }
 
-        public async Task DeleteIncomeCategory(int id)
+        public async Task DeleteIncomeCategory(int categoryId)
         {
-            await _unitOfWork.IncomesCategeries.Delete(id);
+            var incomeCategory = await GetIncomeCategoryById(categoryId) ?? throw new Exception();
+
+            _unitOfWork.IncomesCategeries.Delete(incomeCategory);
             await _unitOfWork.Save();
         }
 
@@ -34,10 +39,14 @@ namespace MoneyTracking.Web.Services.IncomeCategoryServ
             return await _unitOfWork.IncomesCategeries.GetById(id);
         }
 
-        public void UpdateIncomeCategory(IncomeCategory incomeCategory)
+        public async Task UpdateIncomeCategory(IncomeCategoryUpdate incomeCategory)
         {
-            _unitOfWork.IncomesCategeries.Update(incomeCategory);
-            _unitOfWork.Save();
+            var updateIncomeCategory = await GetIncomeCategoryById(incomeCategory.IncomeCategoryId) ?? throw new Exception();
+
+            updateIncomeCategory.Name = incomeCategory.UpdateIncomeCategoryName;
+
+            _unitOfWork.IncomesCategeries.Update(updateIncomeCategory);
+            await _unitOfWork.Save();
         }
     }
 }

@@ -36,13 +36,9 @@ namespace MoneyTracking.Data.Repositories
             _context.Users.Update(user);
         }
 
-        public async Task Delete(int id)
+        public void Delete(User user)
         {
-            var user = await GetById(id);
-            if (user != null)
-            {
-                _context.Users.Remove(user);
-            }
+            _context.Users.Remove(user);
         }
 
         public async Task Save()

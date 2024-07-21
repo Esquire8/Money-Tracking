@@ -1,4 +1,5 @@
 ﻿using MoneyTracking.Data.Entities;
+using MoneyTracking.Web.Models.IncomeCategoryModels;
 
 namespace MoneyTracking.Web.Services.IncomeCategoryServ
 {
@@ -8,10 +9,10 @@ namespace MoneyTracking.Web.Services.IncomeCategoryServ
 
         Task<IncomeCategory?> GetIncomeCategoryById(int id);
 
-        Task CreateIncomeCategory(IncomeCategory incomeCategory);
+        Task CreateIncomeCategory(string categoryName);
 
-        Task DeleteIncomeCategory(int id);
+        Task DeleteIncomeCategory(int categoryId);
 
-        void UpdateIncomeCategory(IncomeCategory incomeCategory);
+        Task UpdateIncomeCategory(IncomeCategoryUpdate incomeCategory);
     }
 }

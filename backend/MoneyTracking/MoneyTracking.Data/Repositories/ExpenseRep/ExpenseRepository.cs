@@ -17,23 +17,37 @@ namespace MoneyTracking.Data.Repositories.ExpenseRep
             await _context.Expenses.AddAsync(entity);
         }
 
-        public async Task Delete(int id)
+        public void Delete(Expense expense)
         {
-            var expense = await GetById(id);
-            if (expense != null)
-            {
-                _context.Remove(expense);
-            }
+            _context.Remove(expense);
         }
 
         public async Task<IEnumerable<Expense>> GetAll()
         {
-            return await _context.Expenses.ToListAsync();
+            return await _context.Expenses
+                .AsNoTracking()
+                .Include(u => u.User)
+                .Include(e => e.ExpenseCategory)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Expense>> GetAllByUser(int userId)
+        {
+            return await _context.Expenses
+                .AsNoTracking()
+                .Include(u => u.User)
+                .Include(e => e.ExpenseCategory)
+                .Where(u => u.User.Id == userId)
+                .ToListAsync();
         }
 
         public async Task<Expense?> GetById(int id)
         {
-            return await _context.Expenses.FindAsync(id);
+            return await _context.Expenses
+                .Include(u => u.User)
+                .Include(e => e.ExpenseCategory)
+                .Where(u => u.Id == id)
+                .SingleOrDefaultAsync();
         }
 
         public async Task Save()

@@ -1,5 +1,6 @@
 ﻿using MoneyTracking.Data.Entities;
 using MoneyTracking.Data.UnitOfWork;
+using MoneyTracking.Web.Models.ExpenseCategoryModels;
 
 namespace MoneyTracking.Web.Services.ExpenseCategoryServ
 {
@@ -12,15 +13,19 @@ namespace MoneyTracking.Web.Services.ExpenseCategoryServ
             _unitOfWork = unitOfWork;
         }
 
-        public async Task CreateExpenseCategory(ExpenseCategory expenseCategory)
+        public async Task CreateExpenseCategory(ExpenseCategoryAdd ExpenseCategory)
         {
-            await _unitOfWork.ExpensesCategories.Add(expenseCategory);
+            var newExpenseCategory = new ExpenseCategory { Name = ExpenseCategory.CategoryName, Parentid = ExpenseCategory.ParentId };
+
+            await _unitOfWork.ExpensesCategories.Add(newExpenseCategory);
             await _unitOfWork.Save();
         }
 
-        public async Task DeleteExpenseCategory(int id)
+        public async Task DeleteExpenseCategory(int categoryId)
         {
-            await _unitOfWork.ExpensesCategories.Delete(id);
+            var expenseCategory = await GetExpenseCategoryById(categoryId) ?? throw new Exception();
+
+            _unitOfWork.ExpensesCategories.Delete(expenseCategory);
             await _unitOfWork.Save();
         }
 
@@ -34,10 +39,15 @@ namespace MoneyTracking.Web.Services.ExpenseCategoryServ
             return await _unitOfWork.ExpensesCategories.GetById(id);
         }
 
-        public void UpdateExpenseCategory(ExpenseCategory expenseCategory)
+        public async Task UpdateExpenseCategory(ExpenseCategoryUpdate expenseCategory)
         {
-            _unitOfWork.ExpensesCategories.Update(expenseCategory);
-            _unitOfWork.Save();
+            var updateExpenseCategory = await GetExpenseCategoryById(expenseCategory.ExpenseCategoryId) ?? throw new Exception();
+
+            updateExpenseCategory.Name = expenseCategory.UpdateExpenseCategoryName;
+            updateExpenseCategory.Parentid = expenseCategory.UpdateParentId;
+
+            _unitOfWork.ExpensesCategories.Update(updateExpenseCategory);
+            await _unitOfWork.Save();
         }
     }
 }
