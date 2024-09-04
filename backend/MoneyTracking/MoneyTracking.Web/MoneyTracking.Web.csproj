@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MoneyTracking.Data\MoneyTracking.Data.csproj" />
+    <ProjectReference Include="..\MoneyTracking.Infrastructure\MoneyTracking.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

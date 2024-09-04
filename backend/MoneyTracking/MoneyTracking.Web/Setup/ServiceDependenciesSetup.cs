@@ -11,11 +11,11 @@ namespace MoneyTracking.Web.Setup
         public static void AddServiceDependencies(this IServiceCollection services)
         {
             // Inject services
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IIncomeService, IncomeService>();
-            services.AddTransient<IIncomeCategoryService, IncomeCategoryService>();
-            services.AddTransient<IExpenseService, ExpenseService>();
-            services.AddTransient<IExpenseCategoryService, ExpenseCategoryService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IIncomeService, IncomeService>();
+            services.AddScoped<IIncomeCategoryService, IncomeCategoryService>();
+            services.AddScoped<IExpenseService, ExpenseService>();
+            services.AddScoped<IExpenseCategoryService, ExpenseCategoryService>();
         }
     }
 }

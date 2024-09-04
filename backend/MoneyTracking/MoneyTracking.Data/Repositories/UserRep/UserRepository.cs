@@ -13,19 +13,25 @@ namespace MoneyTracking.Data.Repositories
             _context = context;
         }
 
-        //Получаем всех пользователей
+        // Получаем всех пользователей
         public async Task<IEnumerable<User>> GetAll()
         {
             return await _context.Users.ToListAsync();
         }
 
-        //Получаем пользователя по Id
+        // Получаем пользователя по Id
         public async Task<User?> GetById(int id)
         {
             return await _context.Users.FindAsync(id);
         }
 
-        //Добавляем пользователя
+        // Получаем пользователя по login
+        public async Task<User?> GetByLogin(string login)
+        {
+            return await _context.Users.SingleOrDefaultAsync(x => x.Login == login);
+        }
+
+        // Добавляем пользователя
         public async Task Add(User user)
         {
             await _context.Users.AddAsync(user);

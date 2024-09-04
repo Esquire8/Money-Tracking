@@ -1,9 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MoneyTracking.Web.Models.UserModels;
 using MoneyTracking.Web.Services.UserServ;
+using System.Security.Claims;
 
 namespace MoneyTracking.Web.Controllers
 {
+    [Authorize(Policy = "ApiKeyPolicy")]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -31,7 +36,7 @@ namespace MoneyTracking.Web.Controllers
             }
         }
 
-        // получить конкретного пользователя
+        // получить конкретного пользователя по id
         [HttpGet]
         public async Task<IActionResult> GetUserById(int id)
         {
@@ -47,15 +52,32 @@ namespace MoneyTracking.Web.Controllers
             }
         }
 
+        // получить конкретного пользователя по login
+        [HttpGet]
+        public async Task<IActionResult> GetUserByLogin(string login)
+        {
+            var user = await _userService.GetUserByLogin(login);
+
+            if (user != null)
+            {
+                return Ok($"Пользователь существует : {user.Login}");
+            }
+            else
+            {
+                return NotFound("Пользователь не найден!");
+            }
+        }
+
         // добавить пользователя
+        [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> AddUser([FromBody] UserAdd user)
+        public async Task<IActionResult> RegisterUser([FromBody] UserAdd user)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _userService.CreateUser(user);
+                    await _userService.RegisterUser(user);
 
                     return Ok($"Пользователь {user.Login} добавлен");
                 }
@@ -68,6 +90,47 @@ namespace MoneyTracking.Web.Controllers
             {
                 return BadRequest(ModelState);
             }
+        }
+
+        // логин
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> LoginUser([FromBody] UserLogin user)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await _userService.LoginUser(user.Login, user.Password);
+
+                    var claims = new List<Claim>()
+                    {
+                        new Claim(ClaimTypes.Name, user.Login)
+                    };
+
+                    ClaimsIdentity claimId = new ClaimsIdentity(claims, "Cookies");
+
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimId));
+
+                    return Ok($"Успешный вход в систему!");
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+
+        // выход пользователя из приложения
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return Ok("Вы вышли из системы!");
         }
 
         // обновить данные пользователя

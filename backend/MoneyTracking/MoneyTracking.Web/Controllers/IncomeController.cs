@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MoneyTracking.Web.Models.IncomeModels;
 using MoneyTracking.Web.Services.IncomeServ;
 using System.Globalization;
 
 namespace MoneyTracking.Web.Controllers
 {
+    [Authorize(Policy = "ApiKeyPolicy")]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class IncomeController : ControllerBase
