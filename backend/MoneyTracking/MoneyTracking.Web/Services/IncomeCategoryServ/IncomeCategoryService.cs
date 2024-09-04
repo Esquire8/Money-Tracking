@@ -39,13 +39,13 @@ namespace MoneyTracking.Web.Services.IncomeCategoryServ
             return await _unitOfWork.IncomesCategeries.GetById(id);
         }
 
-        public async Task UpdateIncomeCategory(IncomeCategoryUpdate incomeCategoryUpdate)
+        public async Task UpdateIncomeCategory(IncomeCategoryUpdate incomeCategory)
         {
-            var incomeCategory = await GetIncomeCategoryById(incomeCategoryUpdate.IncomeCategoryId) ?? throw new Exception();
+            var updatedIncomeCategory = await GetIncomeCategoryById(incomeCategory.IncomeCategoryId) ?? throw new Exception();
 
-            incomeCategory.Name = incomeCategoryUpdate.UpdateIncomeCategoryName;
+            updatedIncomeCategory.Name = incomeCategory.UpdateIncomeCategoryName;
 
-            _unitOfWork.IncomesCategeries.Update(incomeCategory);
+            _unitOfWork.IncomesCategeries.Update(updatedIncomeCategory);
             await _unitOfWork.Save();
         }
     }

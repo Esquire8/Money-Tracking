@@ -6,12 +6,12 @@ using Moq;
 namespace MoneyTracking.Tests
 {
     [TestClass]
-    public class TestIncomeCategoryService
+    public class IncomeCategoryServiceTest
     {
         private readonly Mock<IUnitOfWork> _mockUnitOfWork;
         private readonly IIncomeCategoryService _incomeCategoryService;
 
-        public TestIncomeCategoryService()
+        public IncomeCategoryServiceTest()
         {
             _mockUnitOfWork = new Mock<IUnitOfWork>();
             _incomeCategoryService = new IncomeCategoryService(_mockUnitOfWork.Object);
@@ -25,7 +25,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public void Test_CreateIncomeCategory()
+        public void CreateIncomeCategory_SuccessfullyCreated()
         {
             // Arrange
 
@@ -39,7 +39,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public void Test_DeleteIncomeCategory_WhenCategoryExist()
+        public void DeleteIncomeCategory_WhenCategoryExist_SuccessfullyDeleted()
         {
             // Arrange
 
@@ -53,7 +53,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public void Test_DeleteIncomeCategory_WhenCategoryNotExist()
+        public void DeleteIncomeCategory_WhenCategoryNotExist_DeleteFailed()
         {
             // Arrange
             _mockUnitOfWork.Setup(x => x.IncomesCategeries.GetById(It.IsAny<int>())).ReturnsAsync(() => null);
@@ -68,7 +68,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public async Task Test_GetAllIncomeCategories()
+        public async Task GetAllIncomeCategories_WhenCategiesExist_SuccessfullyFound()
         {
             // Arrange
 
@@ -82,7 +82,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public async Task Test_GetIncomeCategoryById_WhenCategoryExist()
+        public async Task GetIncomeCategoryById_WhenCategoryExist_SuccessfullyFound()
         {
             // Arrange
 
@@ -96,7 +96,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public async Task Test_GetIncomeCategoryById_WhenCategoryNotExist()
+        public async Task GetIncomeCategoryById_WhenCategoryNotExist_NotFound()
         {
             // Arrange
             _mockUnitOfWork.Setup(x => x.IncomesCategeries.GetById(It.IsAny<int>())).ReturnsAsync(() => null);
@@ -109,7 +109,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public async Task Test_UpdateIncomeCategory_WhenCategoryExist()
+        public async Task UpdateIncomeCategory_WhenCategoryExist_SuccessfullyUpdated()
         {
             // Arrange
 
@@ -126,7 +126,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public void Test_UpdateIncomeCategory_WhenCategoryNotExist()
+        public void UpdateIncomeCategory_WhenCategoryNotExist_UpdateFailed()
         {
             // Arrange
             _mockUnitOfWork.Setup(x => x.IncomesCategeries.GetById(It.IsAny<int>())).ReturnsAsync(() => null);

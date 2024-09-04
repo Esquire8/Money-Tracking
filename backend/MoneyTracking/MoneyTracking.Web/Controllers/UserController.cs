@@ -72,15 +72,15 @@ namespace MoneyTracking.Web.Controllers
 
         // обновить данные пользователя
         [HttpPost]
-        public async Task<IActionResult> UpdateUser([FromBody] UserUpdate userUpdate)
+        public async Task<IActionResult> UpdateUser([FromBody] UserUpdate user)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _userService.UpdateUser(userUpdate);
+                    await _userService.UpdateUser(user);
 
-                    return Ok($"Пользователь {userUpdate.NewLogin} обновлен");
+                    return Ok($"Пользователь {user.NewLogin} обновлен");
                 }
                 catch (Exception ex)
                 {

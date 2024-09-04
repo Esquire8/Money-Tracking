@@ -14,6 +14,7 @@ namespace MoneyTracking.Web.Setup
         {
             // Inject repositories
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IIncomeRepository, IncomeRepository>();
             services.AddScoped<IIncomeCategeryRepository, IncomeCategoryRepository>();

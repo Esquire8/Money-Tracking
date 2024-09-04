@@ -1,18 +1,17 @@
 ﻿using MoneyTracking.Data.Entities;
 using MoneyTracking.Data.UnitOfWork;
-using MoneyTracking.Web.Models.UserModels;
 using MoneyTracking.Web.Services.UserServ;
 using Moq;
 
 namespace MoneyTracking.Tests
 {
     [TestClass]
-    public class TestUserService
+    public class UserServiceTest
     {
         private readonly Mock<IUnitOfWork> _mockUnitOfWork;
         private readonly IUserService _userService;
 
-        public TestUserService()
+        public UserServiceTest()
         {
             _mockUnitOfWork = new Mock<IUnitOfWork>();
             _userService = new UserService(_mockUnitOfWork.Object);
@@ -26,7 +25,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public async Task Test_GetUserById_WhenUserExist()
+        public async Task GetUserById_WhenUserExist_SuccessfullyFound()
         {
             // Arrange
 
@@ -40,7 +39,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public async Task Test_GetUserById_WhenUserNotExist()
+        public async Task GetUserById_WhenUserNotExist_NotFound()
         {
             // Arrange
             _mockUnitOfWork.Setup(x => x.Users.GetById(It.IsAny<int>())).ReturnsAsync(() => null);
@@ -53,7 +52,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public async Task Test_UpdateUser_WhenUserExist()
+        public async Task UpdateUser_WhenUserExist_SuccessfullyUpdated()
         {
             // Arrange
 
@@ -70,7 +69,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public void Test_UpdateUser_WhenUserNotExist()
+        public void UpdateUser_WhenUserNotExist_UpdateFailed()
         {
             // Arrange
             _mockUnitOfWork.Setup(x => x.Users.GetById(It.IsAny<int>())).ReturnsAsync(() => null);
@@ -85,7 +84,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public async Task Test_GetAllUsers_WhenUsersExist()
+        public async Task GetAllUsers_WhenUsersExist_SuccessfullyFound()
         {
             // Arrange
 
@@ -99,7 +98,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public async Task Test_GetAllUsers_WhenUsersNotExist()
+        public async Task GetAllUsers_WhenUsersNotExist_NotFound()
         {
             // Arrange
             _mockUnitOfWork.Setup(x => x.Users.GetAll()).ReturnsAsync(TestData.GetListUsersEmpty());
@@ -112,7 +111,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public void Test_CreateUser()
+        public void CreateUser_SuccessfullyCreated()
         {
             // Arrange
 
@@ -126,7 +125,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public void Test_DeleteUser_WhenUserExist()
+        public void DeleteUser_WhenUserExist_SuccessfullyDeleted()
         {
             // Arrange
 
@@ -140,7 +139,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public void Test_DeleteUser_WhenUserNotExist()
+        public void DeleteUser_WhenUserNotExist_DeleteFailed()
         {
             // Arrange
             _mockUnitOfWork.Setup(x => x.Users.GetById(It.IsAny<int>())).ReturnsAsync(() => null);

@@ -54,16 +54,16 @@ namespace MoneyTracking.Web.Services.ExpenseServ
             return await _unitOfWork.Expenses.GetById(id);
         }
 
-        public async Task UpdateExpense(ExpenseUpdate updateExpense)
+        public async Task UpdateExpense(ExpenseUpdate expense)
         {
-            var expense = await GetExpenseById(updateExpense.ExpenseId) ?? throw new Exception();
-            var updateExpenseCategory = await _unitOfWork.ExpensesCategories.GetById(updateExpense.ExpenseCategoryId) ?? throw new Exception();
+            var updatedExpense = await GetExpenseById(expense.ExpenseId) ?? throw new Exception();
+            var updatedExpenseCategory = await _unitOfWork.ExpensesCategories.GetById(expense.ExpenseCategoryId) ?? throw new Exception();
 
-            expense.Amount = updateExpense.Amount;
-            expense.Description = updateExpense.Description;
-            expense.ExpenseCategory = updateExpenseCategory;
+            updatedExpense.Amount = expense.Amount;
+            updatedExpense.Description = expense.Description;
+            updatedExpense.ExpenseCategory = updatedExpenseCategory;
 
-            _unitOfWork.Expenses.Update(expense);
+            _unitOfWork.Expenses.Update(updatedExpense);
             await _unitOfWork.Save();
         }
     }

@@ -6,12 +6,12 @@ using Moq;
 namespace MoneyTracking.Tests
 {
     [TestClass]
-    public class TestIncomeService
+    public class IncomeServiceTest
     {
         private readonly Mock<IUnitOfWork> _mockUnitOfWork;
         private readonly IIncomeService _incomeService;
 
-        public TestIncomeService()
+        public IncomeServiceTest()
         {
             _mockUnitOfWork = new Mock<IUnitOfWork>();
             _incomeService = new IncomeService(_mockUnitOfWork.Object);
@@ -27,7 +27,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public void Test_CreateIncome()
+        public void CreateIncome_SuccessfullyCreated()
         {
             // Arrange
             _mockUnitOfWork.Setup(x => x.Users.GetById(TestData.userId)).ReturnsAsync(TestData.user);
@@ -43,7 +43,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public void Test_DeleteIncome_WhenIncomeExist()
+        public void DeleteIncome_WhenIncomeExist_SuccessfullyDeleted()
         {
             // Arrange
 
@@ -57,7 +57,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public void Test_DeleteIncome_WhenIncomeNotExist()
+        public void DeleteIncome_WhenIncomeNotExist_DeleteFailed()
         {
             // Arrange
             _mockUnitOfWork.Setup(x => x.Incomes.GetById(It.IsAny<int>())).ReturnsAsync(() => null);
@@ -72,7 +72,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public async Task Test_GetAllIncomes()
+        public async Task GetAllIncomes_WhenIncomeExist_SuccessfullyFound()
         {
             // Arrange
 
@@ -86,7 +86,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public async Task Test_GetAllIncomesByUser()
+        public async Task GetAllIncomesByUser_WhenUserIncomesExist_SuccessfullyFound()
         {
             // Arrange
 
@@ -100,7 +100,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public async Task Test_GetIncomeById_WhenIncomeExist()
+        public async Task GetIncomeById_WhenIncomeExist_SuccessfullyFound()
         {
             // Arrange
 
@@ -114,7 +114,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public async Task Test_GetIncomeById_WhenIncomeNotExist()
+        public async Task GetIncomeById_WhenIncomeNotExist_NotFound()
         {
             // Arrange
             _mockUnitOfWork.Setup(x => x.Incomes.GetById(It.IsAny<int>())).ReturnsAsync(() => null);
@@ -127,7 +127,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public async Task Test_UpdateIncome_WhenIncomeExist()
+        public async Task UpdateIncome_WhenIncomeExist_SuccessfullyUpdate()
         {
             // Arrange
 
@@ -144,7 +144,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public void Test_UpdateIncome_WhenIncomeNotExist()
+        public void UpdateIncome_WhenIncomeNotExist_UpdateFailed()
         {
             // Arrange
             _mockUnitOfWork.Setup(x => x.Incomes.GetById(It.IsAny<int>())).ReturnsAsync(() => null);

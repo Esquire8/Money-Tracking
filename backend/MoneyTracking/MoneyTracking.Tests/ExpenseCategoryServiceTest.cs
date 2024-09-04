@@ -6,12 +6,12 @@ using Moq;
 namespace MoneyTracking.Tests
 {
     [TestClass]
-    public class TestExpenseCategoryService
+    public class ExpenseCategoryServiceTest
     {
         private readonly Mock<IUnitOfWork> _mockUnitOfWork;
         private readonly IExpenseCategoryService _expenseCategoryService;
 
-        public TestExpenseCategoryService()
+        public ExpenseCategoryServiceTest()
         {
             _mockUnitOfWork = new Mock<IUnitOfWork>();
             _expenseCategoryService = new ExpenseCategoryService(_mockUnitOfWork.Object);
@@ -25,7 +25,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public void Test_CreateExpenseCategory()
+        public void CreateExpenseCategory_SuccessfullyCreated()
         {
             // Arrange
 
@@ -39,7 +39,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public void Test_DeleteExpenseCategory_WhenCategoryExist()
+        public void DeleteExpenseCategory_WhenCategoryExist_SuccessfullyDeleted()
         {
             // Arrange
 
@@ -53,7 +53,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public void Test_DeleteExpenseCategory_WhenCategoryNotExist()
+        public void DeleteExpenseCategory_WhenCategoryNotExist_DeleteFailed()
         {
             // Arrange
             _mockUnitOfWork.Setup(x => x.ExpensesCategories.GetById(It.IsAny<int>())).ReturnsAsync(() => null);
@@ -68,7 +68,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public async Task Test_GetAllExpenseCategories()
+        public async Task GetAllExpenseCategories_WhenCategoryExist_SuccessfullyFound()
         {
             // Arrange
 
@@ -82,7 +82,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public async Task Test_GetExpenseCategoryById_WhenCategoryExist()
+        public async Task GetExpenseCategoryById_WhenCategoryExist_SuccessfullyFound()
         {
             // Arrange
 
@@ -96,7 +96,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public async Task Test_GetExpenseCategoryById_WhenCategoryNotExist()
+        public async Task GetExpenseCategoryById_WhenCategoryNotExist_NotFound()
         {
             // Arrange
             _mockUnitOfWork.Setup(x => x.ExpensesCategories.GetById(It.IsAny<int>())).ReturnsAsync(() => null);
@@ -109,7 +109,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public async Task Test_UpdateExpenseCategory_WhenCategoryExist()
+        public async Task UpdateExpenseCategory_WhenCategoryExist_SuccessfullyUpdated()
         {
             // Arrange
 
@@ -127,7 +127,7 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public void Test_UpdateExpenseCategory_WhenCategoryNotExist()
+        public void UpdateExpenseCategory_WhenCategoryNotExist_UpdateFailed()
         {
             // Arrange
             _mockUnitOfWork.Setup(x => x.ExpensesCategories.GetById(It.IsAny<int>())).ReturnsAsync(() => null);
