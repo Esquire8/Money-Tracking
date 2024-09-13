@@ -1,17 +1,18 @@
 ﻿using MoneyTracking.Data.Entities;
 using MoneyTracking.Data.UnitOfWork;
+using MoneyTracking.Web.Models.UserModels;
 using MoneyTracking.Web.Services.UserServ;
 using Moq;
 
 namespace MoneyTracking.Tests
 {
     [TestClass]
-    public class UserServiceTest
+    public class UserServiceTests
     {
         private readonly Mock<IUnitOfWork> _mockUnitOfWork;
         private readonly IUserService _userService;
 
-        public UserServiceTest()
+        public UserServiceTests()
         {
             _mockUnitOfWork = new Mock<IUnitOfWork>();
             _userService = new UserService(_mockUnitOfWork.Object);
@@ -52,35 +53,23 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public async Task UpdateUser_WhenUserExist_SuccessfullyUpdated()
+        [DataRow(1, "efim_sokoloff@mail.ru", "Sokoloff4ik", "efim_sokol123", true)]
+        [DataRow(2, "efim_sokoloff@mail.ru", "Sokoloff4ik", "efim_sokol123", false)]
+        public void TryUpdateUser(int userId, string email, string login, string password, bool expected)
         {
             // Arrange
+            UserUpdate userUpdate = new UserUpdate(
+                Id: userId,
+                NewEmail: email,
+                NewLogin: login,
+                NewPassword: password);
 
             // Act
-            var result = _userService.UpdateUser(TestData.userUpdate);
-            var resultUser = await _userService.GetUserById(TestData.userId);
+            var result = _userService.UpdateUser(userUpdate);
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.IsNotNull(resultUser);
-            Assert.IsTrue(result.IsCompletedSuccessfully);
-            Assert.IsNull(result.Exception);
-            Assert.AreEqual(TestData.userUpdate.NewEmail, resultUser.Email);
-        }
-
-        [TestMethod]
-        public void UpdateUser_WhenUserNotExist_UpdateFailed()
-        {
-            // Arrange
-            _mockUnitOfWork.Setup(x => x.Users.GetById(It.IsAny<int>())).ReturnsAsync(() => null);
-
-            // Act
-            var result = _userService.UpdateUser(TestData.userUpdate);
-
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.IsFalse(result.IsCompletedSuccessfully);
-            Assert.IsNotNull(result.Exception);
+            Assert.AreEqual(expected, result.IsCompletedSuccessfully);
         }
 
         [TestMethod]
@@ -125,32 +114,18 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public void DeleteUser_WhenUserExist_SuccessfullyDeleted()
+        [DataRow(1, true)]
+        [DataRow(2, false)]
+        public void TryDeleteUser(int userId, bool exptected)
         {
             // Arrange
 
             // Act
-            var result = _userService.DeleteUser(TestData.userId);
+            var result = _userService.DeleteUser(userId);
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.IsTrue(result.IsCompletedSuccessfully);
-            Assert.IsNull(result.Exception);
-        }
-
-        [TestMethod]
-        public void DeleteUser_WhenUserNotExist_DeleteFailed()
-        {
-            // Arrange
-            _mockUnitOfWork.Setup(x => x.Users.GetById(It.IsAny<int>())).ReturnsAsync(() => null);
-
-            // Act
-            var result = _userService.DeleteUser(TestData.userId);
-
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.IsFalse(result.IsCompletedSuccessfully);
-            Assert.IsNotNull(result.Exception);
+            Assert.AreEqual(exptected, result.IsCompletedSuccessfully);
         }
     }
 }

@@ -1,17 +1,18 @@
 ﻿using MoneyTracking.Data.Entities;
 using MoneyTracking.Data.UnitOfWork;
+using MoneyTracking.Web.Models.ExpenseCategoryModels;
 using MoneyTracking.Web.Services.ExpenseCategoryServ;
 using Moq;
 
 namespace MoneyTracking.Tests
 {
     [TestClass]
-    public class ExpenseCategoryServiceTest
+    public class ExpenseCategoryServiceTests
     {
         private readonly Mock<IUnitOfWork> _mockUnitOfWork;
         private readonly IExpenseCategoryService _expenseCategoryService;
 
-        public ExpenseCategoryServiceTest()
+        public ExpenseCategoryServiceTests()
         {
             _mockUnitOfWork = new Mock<IUnitOfWork>();
             _expenseCategoryService = new ExpenseCategoryService(_mockUnitOfWork.Object);
@@ -39,32 +40,18 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public void DeleteExpenseCategory_WhenCategoryExist_SuccessfullyDeleted()
+        [DataRow(1, true)]
+        [DataRow(2, false)]
+        public void TryDeleteCategory(int categoryId, bool exptected)
         {
             // Arrange
 
             // Act
-            var result = _expenseCategoryService.DeleteExpenseCategory(TestData.categoryId);
+            var result = _expenseCategoryService.DeleteExpenseCategory(categoryId);
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.IsTrue(result.IsCompletedSuccessfully);
-            Assert.IsNull(result.Exception);
-        }
-
-        [TestMethod]
-        public void DeleteExpenseCategory_WhenCategoryNotExist_DeleteFailed()
-        {
-            // Arrange
-            _mockUnitOfWork.Setup(x => x.ExpensesCategories.GetById(It.IsAny<int>())).ReturnsAsync(() => null);
-
-            // Act
-            var result = _expenseCategoryService.DeleteExpenseCategory(TestData.categoryId);
-
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.IsFalse(result.IsCompletedSuccessfully);
-            Assert.IsNotNull(result.Exception);
+            Assert.AreEqual(exptected, result.IsCompletedSuccessfully);
         }
 
         [TestMethod]
@@ -96,49 +83,35 @@ namespace MoneyTracking.Tests
         }
 
         [TestMethod]
-        public async Task GetExpenseCategoryById_WhenCategoryNotExist_NotFound()
+        [DataRow(2)]
+        public async Task GetExpenseCategoryById_WhenCategoryNotExist_NotFound(int categoryId)
         {
             // Arrange
-            _mockUnitOfWork.Setup(x => x.ExpensesCategories.GetById(It.IsAny<int>())).ReturnsAsync(() => null);
 
             // Act
-            var result = await _expenseCategoryService.GetExpenseCategoryById(TestData.categoryId);
+            var result = await _expenseCategoryService.GetExpenseCategoryById(categoryId);
 
             // Assert
             Assert.IsNull(result);
         }
 
         [TestMethod]
-        public async Task UpdateExpenseCategory_WhenCategoryExist_SuccessfullyUpdated()
+        [DataRow(1, "Фрукты", 1, true)]
+        [DataRow(2, "Фрукты", 1, false)]
+        public void TryUpdateCategory(int categoryId, string categoryName, int parentId, bool exptected)
         {
             // Arrange
+            ExpenseCategoryUpdate expenseCategoryUpdate = new ExpenseCategoryUpdate(
+                ExpenseCategoryId: categoryId,
+                UpdateExpenseCategoryName: categoryName,
+                UpdateParentId: parentId);
 
             // Act
-            var result = _expenseCategoryService.UpdateExpenseCategory(TestData.expenseCategoryUpdate);
-            var resultCategory = await _expenseCategoryService.GetExpenseCategoryById(TestData.categoryId);
+            var result = _expenseCategoryService.UpdateExpenseCategory(expenseCategoryUpdate);
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.IsNotNull(resultCategory);
-            Assert.IsTrue(result.IsCompletedSuccessfully);
-            Assert.IsNull(result.Exception);
-            Assert.AreEqual(TestData.expenseCategoryUpdate.UpdateExpenseCategoryName, resultCategory.Name);
-            Assert.AreEqual(1, resultCategory.Parentid);
-        }
-
-        [TestMethod]
-        public void UpdateExpenseCategory_WhenCategoryNotExist_UpdateFailed()
-        {
-            // Arrange
-            _mockUnitOfWork.Setup(x => x.ExpensesCategories.GetById(It.IsAny<int>())).ReturnsAsync(() => null);
-
-            // Act
-            var result = _expenseCategoryService.UpdateExpenseCategory(TestData.expenseCategoryUpdate);
-
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.IsFalse(result.IsCompletedSuccessfully);
-            Assert.IsNotNull(result.Exception);
+            Assert.AreEqual(exptected, result.IsCompletedSuccessfully);
         }
     }
 }

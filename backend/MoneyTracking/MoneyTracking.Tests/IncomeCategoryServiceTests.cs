@@ -6,12 +6,12 @@ using Moq;
 namespace MoneyTracking.Tests
 {
     [TestClass]
-    public class IncomeCategoryServiceTest
+    public class IncomeCategoryServiceTests
     {
         private readonly Mock<IUnitOfWork> _mockUnitOfWork;
         private readonly IIncomeCategoryService _incomeCategoryService;
 
-        public IncomeCategoryServiceTest()
+        public IncomeCategoryServiceTests()
         {
             _mockUnitOfWork = new Mock<IUnitOfWork>();
             _incomeCategoryService = new IncomeCategoryService(_mockUnitOfWork.Object);
