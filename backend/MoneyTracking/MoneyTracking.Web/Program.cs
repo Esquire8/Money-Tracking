@@ -20,6 +20,7 @@ builder.Services.AddTransient<IPasswordHasher, PasswordHasher>();
 
 // Auth dependencies
 builder.Services.AddAuthorizeDependencies();
+builder.Services.AddHttpContextAccessor();
 
 // Authentication and Authorization
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -47,7 +48,7 @@ builder.Services.AddSwaggerGen(x =>
 {
     x.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme()
     {
-        Description = "Api key для защиты API",
+        Description = "Api key for security API",
         Type = SecuritySchemeType.ApiKey,
         Name = AuthConfig.ApiKeyHeaderName,
         In = ParameterLocation.Header,
