@@ -13,12 +13,13 @@ namespace MoneyTracking.Web.Setup
         public static void AddDataDependencies(this IServiceCollection services)
         {
             // Inject repositories
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
-            services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<IIncomeRepository, IncomeRepository>();
-            services.AddTransient<IIncomeCategeryRepository, IncomeCategoryRepository>();
-            services.AddTransient<IExpenseRepository, ExpenseRepository>();
-            services.AddTransient<IExpenseCategoryRepository, ExpenseCategoryRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IIncomeRepository, IncomeRepository>();
+            services.AddScoped<IIncomeCategeryRepository, IncomeCategoryRepository>();
+            services.AddScoped<IExpenseRepository, ExpenseRepository>();
+            services.AddScoped<IExpenseCategoryRepository, ExpenseCategoryRepository>();
         }
     }
 }

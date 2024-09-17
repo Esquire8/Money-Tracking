@@ -41,12 +41,12 @@ namespace MoneyTracking.Web.Services.ExpenseCategoryServ
 
         public async Task UpdateExpenseCategory(ExpenseCategoryUpdate expenseCategory)
         {
-            var updateExpenseCategory = await GetExpenseCategoryById(expenseCategory.ExpenseCategoryId) ?? throw new Exception();
+            var updatedExpenseCategory = await GetExpenseCategoryById(expenseCategory.ExpenseCategoryId) ?? throw new Exception();
 
-            updateExpenseCategory.Name = expenseCategory.UpdateExpenseCategoryName;
-            updateExpenseCategory.Parentid = expenseCategory.UpdateParentId;
+            updatedExpenseCategory.Name = expenseCategory.UpdateExpenseCategoryName;
+            updatedExpenseCategory.Parentid = expenseCategory.UpdateParentId;
 
-            _unitOfWork.ExpensesCategories.Update(updateExpenseCategory);
+            _unitOfWork.ExpensesCategories.Update(updatedExpenseCategory);
             await _unitOfWork.Save();
         }
     }

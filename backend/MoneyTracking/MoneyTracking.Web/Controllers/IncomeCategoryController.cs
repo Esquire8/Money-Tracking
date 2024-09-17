@@ -48,14 +48,14 @@ namespace MoneyTracking.Web.Controllers
 
         // обновить категорию дохода
         [HttpPost]
-        public async Task<IActionResult> UpdateIncomeCategory([FromBody] IncomeCategoryUpdate request)
+        public async Task<IActionResult> UpdateIncomeCategory([FromBody] IncomeCategoryUpdate incomeCategory)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _incomeCategoryService.UpdateIncomeCategory(request);
-                    return Ok($"Категория Id : {request.IncomeCategoryId}, Name : {request.UpdateIncomeCategoryName} обновлена");
+                    await _incomeCategoryService.UpdateIncomeCategory(incomeCategory);
+                    return Ok($"Категория Id : {incomeCategory.IncomeCategoryId}, Name : {incomeCategory.UpdateIncomeCategoryName} обновлена");
                 }
                 catch (Exception ex)
                 {
