@@ -19,12 +19,12 @@ namespace MoneyTracking.Web.Controllers
 
         // добавить категорию расхода
         [HttpPost]
-        public async Task<IActionResult> AddExpenseCategory([FromBody] ExpenseCategoryAdd request)
+        public async Task<IActionResult> AddExpenseCategory([FromBody] ExpenseCategoryAdd expenseCategory)
         {
             try
             {
-                await _expenseCategoryService.CreateExpenseCategory(request);
-                return Ok($"Категория Name : {request.CategoryName}, ParentId : {request.ParentId} добавлена");
+                await _expenseCategoryService.CreateExpenseCategory(expenseCategory);
+                return Ok($"Категория Name : {expenseCategory.CategoryName}, ParentId : {expenseCategory.ParentId} добавлена");
             }
             catch (Exception ex)
             {
@@ -50,14 +50,14 @@ namespace MoneyTracking.Web.Controllers
 
         // обновить категорию расхода
         [HttpPost]
-        public async Task<IActionResult> UpdateExpenseCategory([FromBody] ExpenseCategoryUpdate request)
+        public async Task<IActionResult> UpdateExpenseCategory([FromBody] ExpenseCategoryUpdate expenseCategory)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _expenseCategoryService.UpdateExpenseCategory(request);
-                    return Ok($"Категория Id : {request.ExpenseCategoryId}, Name : {request.UpdateExpenseCategoryName}, ParentId : {request.UpdateParentId} обновлена");
+                    await _expenseCategoryService.UpdateExpenseCategory(expenseCategory);
+                    return Ok($"Категория Id : {expenseCategory.ExpenseCategoryId}, Name : {expenseCategory.UpdateExpenseCategoryName}, ParentId : {expenseCategory.UpdateParentId} обновлена");
                 }
                 catch (Exception ex)
                 {

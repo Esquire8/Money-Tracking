@@ -20,15 +20,15 @@ namespace MoneyTracking.Web.Controllers
 
         // добавить доход
         [HttpPost]
-        public async Task<IActionResult> AddIncome([FromBody] IncomeAdd incomeAdd)
+        public async Task<IActionResult> AddIncome([FromBody] IncomeAdd income)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _incomeService.CreateIncome(incomeAdd);
+                    await _incomeService.CreateIncome(income);
 
-                    return Ok($"Доход добавлен {incomeAdd}");
+                    return Ok($"Доход добавлен {income}");
                 }
                 catch (Exception ex)
                 {
@@ -103,13 +103,13 @@ namespace MoneyTracking.Web.Controllers
 
         // обновить доход пользователя
         [HttpPost]
-        public async Task<IActionResult> UpdateIncome([FromBody] IncomeUpdate incomeUpdate)
+        public async Task<IActionResult> UpdateIncome([FromBody] IncomeUpdate income)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _incomeService.UpdateIncome(incomeUpdate);
+                    await _incomeService.UpdateIncome(income);
 
                     return Ok("Данные о доходе обновлены");
                 }

@@ -1,4 +1,4 @@
-﻿using MoneyTracking.Data.Entities;
+using MoneyTracking.Data.Entities;
 using MoneyTracking.Data.UnitOfWork;
 using MoneyTracking.Interfaces;
 using MoneyTracking.Web.Models.UserModels;
@@ -70,15 +70,15 @@ namespace MoneyTracking.Web.Services.UserServ
             return await _unitOfWork.Users.GetByLogin(login);
         }
 
-        public async Task UpdateUser(UserUpdate userUpdate)
+        public async Task UpdateUser(UserUpdate user)
         {
-            var user = await GetUserById(userUpdate.Id) ?? throw new Exception("Пользователь не найден!");
+            var updatedUser = await GetUserById(user.Id) ?? throw new Exception("Пользователь не найден!");
 
-            user.Login = userUpdate.NewLogin;
-            user.Email = userUpdate.NewEmail;
-            user.Password = userUpdate.NewPassword;
+            updatedUser.Login = user.NewLogin;
+            updatedUser.Email = user.NewEmail;
+            updatedUser.Password = user.NewPassword;
 
-            _unitOfWork.Users.Update(user);
+            _unitOfWork.Users.Update(updatedUser);
             await _unitOfWork.Save();
         }
     }

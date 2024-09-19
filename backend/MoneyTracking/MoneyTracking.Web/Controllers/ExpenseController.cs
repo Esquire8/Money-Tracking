@@ -103,13 +103,13 @@ namespace MoneyTracking.Web.Controllers
 
         // обновить расходы пользователя
         [HttpPost]
-        public async Task<IActionResult> UpdateExpense([FromBody] ExpenseUpdate request)
+        public async Task<IActionResult> UpdateExpense([FromBody] ExpenseUpdate expense)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _expenseService.UpdateExpense(request);
+                    await _expenseService.UpdateExpense(expense);
 
                     return Ok("Данные о расходе обновлены");
                 }
