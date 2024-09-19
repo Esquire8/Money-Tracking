@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MoneyTracking.Web.Models.ExpenseCategoryModels;
 using MoneyTracking.Web.Services.ExpenseCategoryServ;
 
 namespace MoneyTracking.Web.Controllers
 {
+    [Authorize(Policy = "ApiKeyPolicy")]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class ExpenseCategoryController : ControllerBase

@@ -23,6 +23,11 @@ namespace MoneyTracking.Data.Repositories
             return await _context.Users.FindAsync(id);
         }
 
+        public async Task<User?> GetByLogin(string login)
+        {
+            return await _context.Users.SingleOrDefaultAsync(x => x.Login == login);
+        }
+
         public async Task Add(User user)
         {
             await _context.Users.AddAsync(user);

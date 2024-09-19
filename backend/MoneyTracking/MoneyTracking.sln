@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyTracking", "MoneyTracking\MoneyTracking.csproj", "{2ADE3B6C-7AF7-4717-94A9-D9DE1A88C84B}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyTracking.Web", "MoneyTracking.Web\MoneyTracking.Web.csproj", "{8DD2E885-70DD-4DE8-B4D4-0237EBA03F80}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyTracking.Data", "MoneyTracking.Data\MoneyTracking.Data.csproj", "{68168AE1-1ECF-4DC7-996D-FDB00061D4DB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyTracking.Infrastructure", "MoneyTracking.Infrastructure\MoneyTracking.Infrastructure.csproj", "{78A353E3-9BCC-4B1C-8CA8-A692B84D1769}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyTracking.Tests", "MoneyTracking.Tests\MoneyTracking.Tests.csproj", "{712E269B-551D-4403-BA3A-73A21DA40434}"
 EndProject
@@ -17,10 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2ADE3B6C-7AF7-4717-94A9-D9DE1A88C84B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2ADE3B6C-7AF7-4717-94A9-D9DE1A88C84B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2ADE3B6C-7AF7-4717-94A9-D9DE1A88C84B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2ADE3B6C-7AF7-4717-94A9-D9DE1A88C84B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8DD2E885-70DD-4DE8-B4D4-0237EBA03F80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8DD2E885-70DD-4DE8-B4D4-0237EBA03F80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DD2E885-70DD-4DE8-B4D4-0237EBA03F80}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -29,6 +25,10 @@ Global
 		{68168AE1-1ECF-4DC7-996D-FDB00061D4DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68168AE1-1ECF-4DC7-996D-FDB00061D4DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68168AE1-1ECF-4DC7-996D-FDB00061D4DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78A353E3-9BCC-4B1C-8CA8-A692B84D1769}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78A353E3-9BCC-4B1C-8CA8-A692B84D1769}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78A353E3-9BCC-4B1C-8CA8-A692B84D1769}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78A353E3-9BCC-4B1C-8CA8-A692B84D1769}.Release|Any CPU.Build.0 = Release|Any CPU
 		{712E269B-551D-4403-BA3A-73A21DA40434}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{712E269B-551D-4403-BA3A-73A21DA40434}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{712E269B-551D-4403-BA3A-73A21DA40434}.Release|Any CPU.ActiveCfg = Release|Any CPU

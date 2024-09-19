@@ -1,4 +1,5 @@
-﻿using MoneyTracking.Data.Repositories;
+﻿using MoneyTracking.Data;
+using MoneyTracking.Data.Repositories;
 using MoneyTracking.Data.Repositories.ExpenseCategoryRep;
 using MoneyTracking.Data.Repositories.ExpenseRep;
 using MoneyTracking.Data.Repositories.IncomeCategoryRep;
@@ -20,6 +21,8 @@ namespace MoneyTracking.Web.Setup
             services.AddScoped<IIncomeCategeryRepository, IncomeCategoryRepository>();
             services.AddScoped<IExpenseRepository, ExpenseRepository>();
             services.AddScoped<IExpenseCategoryRepository, ExpenseCategoryRepository>();
+
+            services.AddScoped<MoneyTrackingContext>();
         }
     }
 }

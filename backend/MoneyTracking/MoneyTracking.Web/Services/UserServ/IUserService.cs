@@ -9,7 +9,11 @@ namespace MoneyTracking.Web.Services.UserServ
 
         Task<User?> GetUserById(int id);
 
-        Task CreateUser(UserAdd user);
+        Task<User?> GetUserByLogin(string login);
+
+        Task LoginUser(string login, string password);
+
+        Task RegisterUser(UserAdd user);
 
         Task DeleteUser(int userId);
 
