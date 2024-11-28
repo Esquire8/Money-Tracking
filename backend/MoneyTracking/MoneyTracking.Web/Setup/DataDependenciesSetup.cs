@@ -1,4 +1,5 @@
-﻿using MoneyTracking.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using MoneyTracking.Data;
 using MoneyTracking.Data.Repositories;
 using MoneyTracking.Data.Repositories.ExpenseCategoryRep;
 using MoneyTracking.Data.Repositories.ExpenseRep;
@@ -11,18 +12,22 @@ namespace MoneyTracking.Web.Setup
 {
     public static class DataDependenciesSetup
     {
-        public static void AddDataDependencies(this IServiceCollection services)
+        public static void AddDataDependencies(this IServiceCollection services, IConfiguration configuration)
         {
             // Inject repositories
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
 
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IIncomeRepository, IncomeRepository>();
-            services.AddScoped<IIncomeCategeryRepository, IncomeCategoryRepository>();
-            services.AddScoped<IExpenseRepository, ExpenseRepository>();
-            services.AddScoped<IExpenseCategoryRepository, ExpenseCategoryRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IIncomeRepository, IncomeRepository>();
+            services.AddTransient<IIncomeCategeryRepository, IncomeCategoryRepository>();
+            services.AddTransient<IExpenseRepository, ExpenseRepository>();
+            services.AddTransient<IExpenseCategoryRepository, ExpenseCategoryRepository>();
 
-            services.AddScoped<MoneyTrackingContext>();
+            services.AddDbContext<MoneyTrackingContext>(
+                options =>
+                {
+                    options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+                });
         }
     }
 }
