@@ -13,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
 // Add services to the container.
-builder.Services.AddDataDependencies();
+builder.Services.AddDataDependencies(configuration);
 builder.Services.AddServiceDependencies();
 
 builder.Services.AddTransient<IPasswordHasher, PasswordHasher>();
@@ -72,12 +72,6 @@ builder.Services.AddSwaggerGen(x =>
 
     x.AddSecurityRequirement(requirement);
 });
-
-builder.Services.AddDbContext<MoneyTrackingContext>(
-    options =>
-    {
-        options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
-    });
 
 var app = builder.Build();
 
